@@ -6,19 +6,27 @@
  - Michał Ćwierz
  - Mikołaj Marchewa
 
-
 ### Do you need more people: No
+
 ## Short description of the idea
 Jobaid is web application that helps people to find a job in IT [1] matching specific job offers from the internet to thier abilities and technologies they use at daily basis. ML algorithm will estimate salary that given user could potentialy earn at specific position . Prediction will be based on level of expirience, knowledge of given programming language, company size and location etc.
 
-## features:
-- web scraping in order to gather information for both, job offers matching and training ML model
-- matching job offers to user input (abilities, technologies, location etc.)
-- estimating salary for specific paramethers mentioned above
-- gathering data from anonymous users to enlarge data amount for future training sessions
-- presenting some statistics, plots etc.
+## User stories:
+### job offers list combined from many websites
+- User can receive job offers properly filtered according to his preferences and skills
+### salary estimation with ML
+- User will get estimated salary based on his skills, programming language, city, company size etc.
+### gather data from anonymous visitors
+- visitor will be able to fill form about their work conditions (salary, company size, location, skills etc) and send it to our data base in order to enlarge our dataset
+### statistics and Chart
+- User will be given lots of statistics parameters and plots representing current situation in each city, demand for programming language and so on
+### company ranking (optional => depends on possibility to scrap benefits and info about friendly conditions to develop)
+- User will see ranking of companies based on working conditions 
+### emails with week reports (optional => if there will be enough time)
+- User can fill form covering his interest in job offers and will receive weekly reports with job offers matched to him/her
 
 [1] - IT is good start thanks to amount of job offers available on the internet, if it succeed we can widen our app to other job sectors.
+
 
 ## Tech stack:
 - backend => Python, Django
