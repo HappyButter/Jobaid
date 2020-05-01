@@ -30,8 +30,8 @@ Jobaid is web application that helps people to find a job in IT [1] matching spe
 
 ## Tech stack:
 - backend => Python, Django
-- frontend => JavaScript, React
-- database => MongoDB
+- frontend => Django templates
+- database => MongoDB or Postgres
 
 ## Project roadmap
 
