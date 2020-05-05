@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse # just temporary until templates will be created
 
-def home(request):
-    return HttpResponse('<h1>salary prediction page</h1>')
+
+def salaryprediction(request):
+    context = {
+        "title": "Salary Prediction"
+    }
+    return render(request, "salary_prediction/salary_prediction.html", context)
