@@ -8,15 +8,25 @@ class Finances(EmbeddedDocument):
     contracts = fields.DictField(default={'b2b': False, 'uop': False})
     salary = fields.EmbeddedDocumentField(Salary)
 
+class Location(EmbeddedDocument):
+    adress = fields.StringField(max_length=50)
+    coordinates = fields.GeoPointField()
+    
+
 class JobPosition(Document):
     title = fields.StringField(max_length=100)
+    location = fields.EmbeddedDocumentField(Location)
+    
     company = fields.StringField(max_length=100)
-    location = fields.StringField(max_length=100)
     companiy_size = fields.IntField(min_value = 0)
+
     expirience_level = fields.StringField(max_length=100)
     languages = fields.ListField(fields.StringField(max_length=20))
     technologies = fields.ListField(fields.StringField(max_length=40))
+
     finances = fields.EmbeddedDocumentField(Finances)
+
+    active = fields.BooleanField(default=True)
     offer_hash = fields.StringField(max_length=32)
 
     meta = {'allow_inheritance': True}
