@@ -21,9 +21,10 @@ class JobPosition(Document):
 
     meta = {'allow_inheritance': True}
 
+    def __str__(self):
+        return self.title
+
 class JobOffer(JobPosition):
     offer_link = fields.URLField()
     source_page = fields.StringField(max_length=100)
 
-    def __str__(self):
-        return self.title
