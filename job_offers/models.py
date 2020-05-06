@@ -9,14 +9,14 @@ class Finances(EmbeddedDocument):
     salary = fields.EmbeddedDocumentField(Salary)
 
 class Location(EmbeddedDocument):
-    adress = fields.StringField(max_length=50)
+    address = fields.StringField(max_length=50)
     coordinates = fields.GeoPointField()
     
 
 class JobPosition(Document):
     title = fields.StringField(max_length=100)
     location = fields.EmbeddedDocumentField(Location)
-    
+
     company = fields.StringField(max_length=100)
     companiy_size = fields.IntField(min_value = 0)
 
@@ -26,7 +26,6 @@ class JobPosition(Document):
 
     finances = fields.EmbeddedDocumentField(Finances)
 
-    active = fields.BooleanField(default=True)
     offer_hash = fields.StringField(max_length=32)
 
     meta = {'allow_inheritance': True}
@@ -37,4 +36,4 @@ class JobPosition(Document):
 class JobOffer(JobPosition):
     offer_link = fields.URLField()
     source_page = fields.StringField(max_length=100)
-
+    active = fields.BooleanField(default=True)
