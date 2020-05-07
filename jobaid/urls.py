@@ -18,11 +18,11 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
+    # path('/', views.home),
+    # path('home/', views.home),
+    path('', include('job_offers.urls')),
+    path('about/', views.about, name='about'),
     path('admin/', admin.site.urls),
-    path('', views.home),
-    path('home/', views.home),
-    path('about/', views.about),
-    path('joboffers/', include('job_offers.urls')),
     path('salaryprediction/', include('salary_prediction.urls')),
     path('statistics/', include('statistics_and_charts.urls')),
 ]

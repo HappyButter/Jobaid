@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/navigation.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/footer.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static app|add:'/styles/'|add:page|add:'.css' %}">
+
+    <!-- these two files will be downloaded in static files in production! -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <header>
+            {% include "./header.html" %}
+        </header>
+        <nav>
+            {% include "./navigation.html" %}
+        </nav>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        <footer>
+            {% include "./footer.html" %}
+        </footer>
+    </div>
+    <script src="{% static 'scripts/main.js' %}"></script>
+    <script src="{% static app|add:'/scripts/'|add:page|add:'.js' %}"></script>
+</body>
+</html>

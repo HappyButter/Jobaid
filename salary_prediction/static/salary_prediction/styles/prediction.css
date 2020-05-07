@@ -1,0 +1,7 @@
+/* some random styles to check if file is loading */
+
+h3 {
+    padding: 10px;  
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
