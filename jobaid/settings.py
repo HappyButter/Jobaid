@@ -57,7 +57,11 @@ ROOT_URLCONF = 'jobaid.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [(os.path.join(BASE_DIR, 'templates'))],
+        'DIRS': [(os.path.join(BASE_DIR, 'templates')),
+                 (os.path.join(BASE_DIR, 'jobaid/templates')),
+                 (os.path.join(BASE_DIR, 'job_offers/templates')),
+                 (os.path.join(BASE_DIR, 'statistics_and_charts/templates')),
+                 (os.path.join(BASE_DIR, 'salary_prediciton/templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
