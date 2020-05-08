@@ -1,0 +1,35 @@
+{
+    "title": "position name",
+    "company": "company name",
+    "companiy_size": 2000,
+    "location": {
+        "address": "full company address",
+        "coordinates": {
+            "lat": 53.232,
+            "lng": 45.312
+        }
+    },
+    "expirience_level": "junior/mid/senior",
+    "languages": ["js", "Python", "..."],
+    "technologies": ["react", "django", "..."],
+    "finances": {
+        "contracts": {
+            "b2b": true,
+            "uop": false
+        },
+        "salary": {
+            "b2b": {
+                "min": 12000,
+                "max": 16000
+            },
+            "uop": {
+                "min": 0,
+                "max": 0
+            }
+        }
+    },
+    "hash": "3sdfhci7c134bdh3n8d62486nd",
+    "offer_link": "https://bulgodjobs....",
+    "source_page": "buldogjobs.pl",
+    "active": true
+}
