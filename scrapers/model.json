@@ -3,11 +3,7 @@
     "company": "company name",
     "companiy_size": 2000,
     "location": {
-        "address": "full company address",
-        "coordinates": {
-            "lat": 53.232,
-            "lng": 45.312
-        }
+        "address": "full company address"
     },
     "expirience_level": "junior/mid/senior",
     "languages": ["js", "Python", "..."],
