@@ -6,10 +6,7 @@ from hashlib import blake2b
 
 class TeamquestSpider(scrapy.Spider):
     name = 'TeamQuest'
-    # allowed_domains = ['teamquest.pl']
 
-    # start_urls = ['https://teamquest.pl/praca-w-it']
-    # site_prefix = 'https://teamquest.pl/praca-w-it/s/'
     start_urls = ['https://teamquest.pl/praca-w-it/s/' + str(number) for number in range(1,10)]
 
     url_prefix = 'https://teamquest.pl'
@@ -20,7 +17,10 @@ class TeamquestSpider(scrapy.Spider):
 
     def _get_company_location(self, ancestor):
         try:
-            return [location for location in ancestor.css('.job-location-btn .strong::text').extract() if location.strip() != ''][0].strip()
+            returned = [location for location in ancestor.css('.job-location-btn .strong::text').extract() if location.strip() != ''][0].strip()
+            if returned == 'Praca zdalna':
+                returned = 'remote'
+            return returned
         except IndexError:
             return None
 
@@ -93,26 +93,27 @@ class TeamquestSpider(scrapy.Spider):
 
         offer['title'] = self._get_position_title(response)
         offer['company'] = None
-        offer['location'] = self._get_company_location(response)    # do zrobienia
         offer['company_size'] = None
+        offer['location'] = {
+            'address': self._get_company_location(response)
+        }
         offer['experience_level'] = None
-        
+
         skills_set = self._get_languages_and_technologies_set(response)
         lang_set = self._extract_languages(skills_set)
 
         offer['languages'] = list(lang_set)
         offer['technologies'] = list(skills_set - lang_set)
-        
         offer['finances'] = {
-            'contract': self._get_contract_types(response),
+            'contracts': self._get_contract_types(response),
             'salary': self._get_salary_forks(response)
         }
+
+        offer['hash'] = self._generate_offer_hash(offer)
 
         offer_url = response.url
         offer['offer_link'] = offer_url
         offer['source_page'] = ''.join(TeamquestSpider.url_prefix.split('https://'))    #get rid of https://
-
-        offer['hash'] = self._generate_offer_hash(offer)
 
         yield offer
 
