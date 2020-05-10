@@ -20,7 +20,7 @@ class BulldogJobSpider(Spider):
         'https://bulldogjob.pl/companies/jobs?page=7',
         'https://bulldogjob.pl/companies/jobs?page=8',
         'https://bulldogjob.pl/companies/jobs?page=9',
-        'https://bulldogjob.pl/companies/jobs?page=10'
+        # 'https://bulldogjob.pl/companies/jobs?page=10'
     ]
 
 
@@ -107,28 +107,55 @@ class BulldogJobSpider(Spider):
 
         for salary_div in ancestor.css('.salary'):
             contract_type = salary_div.css('.second-row::text').get().lower()
-            forks = salary_div.css('.money::text').get().replace(" ", "").lower()
-            forks = forks.replace("from", "").replace("od", "").replace("do", "").replace("upto", "").replace("up", "").replace("to", "").strip()
-            separator = forks.find("-")
-            if 'b2b' in contract_type:
-                salary['b2b'] = {
-                    'min': int(forks[0:separator]),
-                    'max': int(forks[separator + 1:])
-                }
-            if 'umowa o pracę' in contract_type or 'employment contract' in contract_type:
-                salary['uop'] = {
-                    'min': int(forks[0:separator]),
-                    'max': int(forks[separator + 1:])
-                }
 
+            per_hour = "hour" in contract_type or "godzina" in contract_type
+
+            forks_str = salary_div.css('.money::text').get().replace(" ", "").lower()
+            separator = forks_str.find("-")
+            lower_boundary_keywords = ["from", "od"]
+            upper_boundary_keywords = ["upto", "to", "do"]
+            if separator != -1:
+                if 'b2b' in contract_type:
+                    salary['b2b'] = {
+                        'min': int(forks_str[0:separator]) if not per_hour else int(forks_str[0:separator])*160,
+                        'max': int(forks_str[separator + 1:]) if not per_hour else int(forks_str[separator + 1:])*160
+                    }
+                if 'umowa o pracę' in contract_type or 'employment contract' in contract_type:
+                    salary['uop'] = {
+                        'min': int(forks_str[0:separator]) if not per_hour else int(forks_str[0:separator])*160,
+                        'max': int(forks_str[separator + 1:]) if not per_hour else int(forks_str[separator + 1:])*160
+                    }
+            else:
+                forks_str = forks_str.replace("from", "").replace("od", "").replace("do", "").replace("upto", "").strip()
+                if any([keyword in forks_str for keyword in lower_boundary_keywords]):
+                    if 'b2b' in contract_type:
+                        salary['b2b'] = {
+                            'min': int(forks_str) if not per_hour else int(forks_str)*160,
+                            'max': None
+                        }
+                    if 'umowa o pracę' in contract_type or 'employment contract' in contract_type:
+                        salary['uop'] = {
+                            'min': int(forks_str) if not per_hour else int(forks_str)*160,
+                            'max': None
+                        }
+                elif any([keyword in forks_str for keyword in upper_boundary_keywords]):
+                    if 'b2b' in contract_type:
+                        salary['b2b'] = {
+                            'min': None,
+                            'max': int(forks_str) if not per_hour else int(forks_str)*160
+                        }
+                    if 'umowa o pracę' in contract_type or 'employment contract' in contract_type:
+                        salary['uop'] = {
+                            'min': None,
+                            'max': int(forks_str) if not per_hour else int(forks_str)*160
+                        }
         return salary
 
 
-    def __generate_offer_hash(self, offer, internal_id):
+    def __generate_offer_hash(self, offer):
         string = json.dumps(offer, sort_keys=True)
         h = blake2b(digest_size=30)
         h.update(string.encode('utf-8'))
-        h.update(internal_id.encode('utf-8'))
 
         return h.hexdigest()
 
@@ -141,7 +168,13 @@ class BulldogJobSpider(Spider):
 
         offer['title'] = self.__get_position_title(main_content)
         offer['company'] = self.__get_company_name(main_content)
-        offer['level'] = self.__get_knowledge_level(main_content)
+        offer['company_size'] = self.__get_company_size(sidebar_details)
+
+        offer['location'] = {
+            'address': self.__get_company_location(sidebar_details)
+        }
+
+        offer['expirience_level'] = self.__get_knowledge_level(main_content)
 
         skills_set = self.__get_languages_and_technologies_set(main_content)
         lang_set = self.__extract_languages(skills_set)
@@ -149,24 +182,16 @@ class BulldogJobSpider(Spider):
         offer['languages'] = list(lang_set)
         offer['technologies'] = list(skills_set - lang_set) # set differene
 
-
-        offer['company_size'] = self.__get_company_size(sidebar_details)
-        offer['location'] = self.__get_company_location(sidebar_details)
-
         offer['finances'] = {
             'contract': self.__get_contract_types(sidebar_details),
             'salary': self.__get_salary_forks(sidebar_details)
         }
 
+        offer['hash'] = self.__generate_offer_hash(offer)
+
         offer_url = response.url
         offer['offer_link'] = offer_url
-        offer['source_page'] = offer_url[8:offer_url.find('/companies')] # yes yes yes, I know it's greeeeeedy
-
-        id_start = offer_url.find('jobs/')
-        id_end= offer_url.find('-')
-        internal_offer_id = offer_url[id_start:id_end]
-
-        offer['hash'] = self.__generate_offer_hash(offer, internal_offer_id)
+        offer['source_page'] = 'bulldogjob.pl'
 
         yield offer
 
