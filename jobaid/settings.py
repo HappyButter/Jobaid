@@ -11,6 +11,17 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import environ
+import mongoengine
+
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, True)
+)
+# reading .env file
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,6 +45,7 @@ INSTALLED_APPS = [
     'job_offers.apps.JobOffersConfig',
     'salary_prediction.apps.SalaryPredictionConfig',
     'statistics_and_charts.apps.StatisticsAndChartsConfig',
+    'rest_framework_mongoengine',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,10 +94,19 @@ WSGI_APPLICATION = 'jobaid.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': ''
     }
 }
+
+MONGO_USER = env('MONGO_USER')
+MONGO_PASS = env('MONGO_PASS')
+MONGO_HOST = env('MONGO_HOST')
+MONGO_NAME = env('MONGO_NAME')
+MONGO_DATABASE_HOST = \
+'mongodb+srv://%s:%s@%s/%s' \
+% (MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_NAME)
+
+mongoengine.connect(MONGO_NAME, host=MONGO_DATABASE_HOST)
 
 
 # Password validation
