@@ -1,4 +1,5 @@
 from django import forms
+import json
 
 EXPERIENCE_CHOICES =(
     ("Junior", "Junior"),
@@ -14,3 +15,6 @@ class FilterForm(forms.Form):
     location = forms.CharField(max_length=100)
     fork_min = forms.IntegerField()
     fork_max = forms.IntegerField()
+
+class DataForm(forms.Form):
+    json_file = forms.FileField()
