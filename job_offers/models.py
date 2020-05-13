@@ -14,22 +14,22 @@ class Finances(EmbeddedDocument):
 class Location(EmbeddedDocument):
     address = fields.StringField(max_length=50)
     coordinates = fields.GeoPointField()
-    
+
 
 class JobPosition(Document):
     title = fields.StringField(max_length=100)
     location = fields.EmbeddedDocumentField(Location)
 
     company = fields.StringField(max_length=100)
-    companiy_size = fields.IntField(min_value = 0)
+    company_size = fields.IntField(min_value = 0)
 
-    expirience_level = fields.StringField(max_length=100)
-    languages = fields.ListField(fields.StringField(max_length=20))
-    technologies = fields.ListField(fields.StringField(max_length=40))
+    experience_level = fields.StringField(max_length=100)
+    languages = fields.ListField(fields.StringField())
+    technologies = fields.ListField(fields.StringField())
 
     finances = fields.EmbeddedDocumentField(Finances)
 
-    offer_hash = fields.StringField(max_length=32)
+    offer_hash = fields.StringField(max_length=60)
 
     meta = {'allow_inheritance': True}
 

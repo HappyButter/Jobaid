@@ -6,6 +6,10 @@
 
     <h2 class="title">Job Offers Page</h2>
     <p class="paragraph">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Placeat, doloremque. Odit a officia ipsa quisquam atque animi qui sequi quae eos quibusdam, voluptatibus dignissimos maiores, eligendi vitae impedit ducimus sint fuga. Consequuntur aliquam necessitatibus quasi incidunt explicabo. Nemo accusantium suscipit, ad aspernatur maxime similique nulla qui? Cum blanditiis repellendus reprehenderit.</p>
-    
+    <form method="POST" enctype="multipart/form-data"> 
+        {% csrf_token %} 
+        {{ data_json.as_p }}
+        <input type="submit" value="Submit"> 
+    </form> 
 
 {% endblock %}
