@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import FilterForm, DataForm
+from .forms import FilterForm
 from .models import JobOffer, JobPosition
 
 def div_technologies(f_technologies):
@@ -25,8 +25,6 @@ def joboffers(request):
 
         f_experience_level = form['experience_level'].value()
 
-        print(f'lvl: {f_experience_level}')
-
         f_b2b = form['b2b'].value()
 
         f_uop = form['uop'].value()
@@ -37,19 +35,17 @@ def joboffers(request):
         f_fork_max = form['fork_max'].value()
 
         offers = JobPosition.objects(
-                                    # technologies=f_technologies,
-                                    experience_level=f_experience_level,
-                                    # finances__contracts__b2b=f_b2b,
-                                    # # finances__contracts__uop=f_uop,
-                                    # location__address=f_location,
-                                    # finances__salary__b2b__min__gte=int(f_fork_min),
-                                    # finances__salary__b2b__max__lte=int(f_fork_max),
-                                    )
-        print(offers)
+            technologies=f_technologies,
+            experience_level__in=f_experience_level,
+            finances__contracts__b2b=f_b2b,
+            finances__contracts__uop=f_uop,
+            location__address=f_location,
+            finances__salary__b2b__min__gte=int(f_fork_min),
+            finances__salary__b2b__max__lte=int(f_fork_max),
+        )
+        
         context['offers'] = offers
     else:
         form = FilterForm()
-        form2 = DataForm()
         context['form'] = form
-        context['form2'] = form2
     return render(request, 'job_offers/content.html', context)
