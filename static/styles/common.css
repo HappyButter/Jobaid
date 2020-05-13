@@ -1,0 +1,15 @@
+.content__subtitle {
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    font-weight: 400;
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+.content__subtitle::after {
+    content: "";
+    display: block;
+    width: 50%;
+    height: 1px;
+    background-color: rgb(56, 56, 56);
+}
