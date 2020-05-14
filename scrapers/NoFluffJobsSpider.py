@@ -1,22 +1,28 @@
 from scrapy import Spider
 from scrapy.http import Request
 from hashlib import blake2b
-from re import search
 import json
 
 class NoFluffJobsSpider(Spider):
     name = "nofluffjobs"
+
     languages = ["java", "c#", "c", "c++", "c++ 11", "python", "javascript", "typescript",
     "r", "php", "ruby on rails", "html5", "html", "css3", "scss", "css", "kotlin",
     "swift", "flutter", "sql", "scala", "rust", "go", "vba", "ruby", "objective-c",
     "nosql", "dart" "golang", "php 7"]
-    start_urls = ['https://nofluffjobs.com/pl/jobs/remote?criteria=city%3Dremote,warszawa,wroclaw,krakow,gdansk,poznan,trojmiasto,slask,lodz,katowice,lublin,szczecin,bydgoszcz,bialystok,gdynia,gliwice,sopot']
+
+    start_urls = [
+        'https://nofluffjobs.com/pl/jobs/remote?criteria=city%3Dremote,warszawa,wroclaw,krakow,gdansk,poznan,trojmiasto,slask,lodz,katowice,lublin,szczecin,bydgoszcz,bialystok,gdynia,gliwice,sopot'
+        ]
+
+
     def __get_position_title(self, ancestor):
         title = ancestor.css('.posting-details-description h1::text').get()
         if title == None:
             return None
         return title.strip()
-    
+
+
     def __get_company_name(self, ancestor):
         name = ancestor.css('.company-name::text').get()
         if name == None:
@@ -25,7 +31,8 @@ class NoFluffJobsSpider(Spider):
                 return None
             return name.strip()
         return name.strip()
-    
+
+
     def __get_location(self, ancestor):
         location = ancestor.css('.text-break::text').get()
         if location == None:
@@ -35,6 +42,7 @@ class NoFluffJobsSpider(Spider):
             return location.strip()
         return location.strip()
 
+
     def __get_company_size(self, ancestor):
         size = ancestor.css('.d-block:nth-child(3) .d-flex .mb-0::text').get()
         if size == None:
@@ -43,6 +51,7 @@ class NoFluffJobsSpider(Spider):
             tmp = size.split('-')
             return int(tmp[1])
         return int(size.replace('+', ''))
+
 
     def __get_experience_level(self, ancestor):
         experience = ancestor.css('.active p::text').getall()
@@ -55,6 +64,7 @@ class NoFluffJobsSpider(Spider):
         if "Senior" in experience or "Expert" in experience:
             return "Senior"
 
+
     def __get_languages_and_technologies_set(self, ancestor):
         skill_set = set()
         all_set = ancestor.css('.btn-outline-success::text').getall()
@@ -64,12 +74,14 @@ class NoFluffJobsSpider(Spider):
                 skill_set.add(item)
         return skill_set
 
+
     def __extract_languages(self, technology_set):
         skill_set = set()
         for item in technology_set:
             if item.lower() in self.languages:
                 skill_set.add(item)
         return skill_set
+
 
     def __get_finances(self, ancestor):
         finances = {
@@ -118,16 +130,16 @@ class NoFluffJobsSpider(Spider):
                 }
         return finances
 
-    def __generate_offer_hash(self, offer, internal_id):
+
+    def __generate_offer_hash(self, offer):
         string = json.dumps(offer, sort_keys=True)
         h = blake2b(digest_size=30)
         h.update(string.encode('utf-8'))
-        h.update(internal_id.encode('utf-8'))
         return h.hexdigest()
+
 
     def parse_offer(self, ancestor):
         offer = dict()
-
         offer['title'] = self.__get_position_title(ancestor)
         offer['company'] = self.__get_company_name(ancestor)
         offer['location'] = { 'address': self.__get_location(ancestor)}
@@ -142,19 +154,22 @@ class NoFluffJobsSpider(Spider):
             'contracts' : finances['contracts'],
             'salary' : finances['salary']
         }
+
+        offer['hash'] = self.__generate_offer_hash(offer)
+
         offer_url = ancestor.url
         offer['offer_link'] = offer_url
         offer['source_page'] = offer_url[8:offer_url.find('/pl/job')]
         
-        internal_offer_id = search('\-(?:.(?!\-))+$', offer_url).group(0)[1:]
-        offer['offer_hash'] = self.__generate_offer_hash(offer, internal_offer_id)
         yield offer
+
 
     def parse_page(self, response):
         links = response.css('.posting-list-item::attr(href)').getall()
         source = 'https://nofluffjobs.com'
         for link in links:
             yield Request(source + link, callback=self.parse_offer)
+
 
     def parse(self, response):
         number = int(response.css('.page-item~ .disabled+ .page-item .page-link::text').get())
