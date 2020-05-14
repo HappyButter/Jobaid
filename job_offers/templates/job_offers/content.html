@@ -74,9 +74,17 @@
                         <span class="technology__item">Redux</span>
                     </div>
                     <div class="offer__finances">
-                        <span class="details__prefix">salary:</span>
-                        <span class="offer__salary">12 000 - 15 000 PLN</span>
-                        <span class="offer__contracts">B2B / UOP</span>
+                        <span class="details__prefix details__salary">salary:</span>
+                        <div>
+                            <div>
+                                <span class="offer__salary">12 000 - 15 000 PLN</span>
+                                <span class="offer__contracts">B2B</span>
+                            </div>
+                            <div>
+                                <span class="offer__salary">10 000 - 13 000 PLN</span>
+                                <span class="offer__contracts">UOP</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="item__row item__link">
@@ -140,6 +148,54 @@
                     <a href="https://bulldogjob.pl/companies/jobs" class="offer__link">external offer link</a>
                 </div>
             </article>
+            {% for offer in offers %}
+            <article class="offer__item">
+                <div class="item__row item__title">
+                    <span class="offer__name">{{ offer.title }}</span>
+                    <span class="offer__experience">{{ offer.experience_level }}</span>
+                    <span class="offer__location">{{ offer.location.address }}</span>
+                </div>
+                <div class="item__row item__details">
+
+                    <div class="offer__languages">
+                        <span class="details__prefix">languages:</span>
+                        {% for lang in offer.languages %}
+                            <span class="language__item">{{ lang }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="offer__technologies">
+                        <span class="details__prefix">technologies:</span>
+                        {% for tech in offer.technologies %}
+                            <span class="language__item">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="offer__finances">
+                        <span class="details__prefix">salary:</span>
+                        <div>
+                            {% if offer.finances.b2b %}
+                                {% if offer.finances.salary.b2b.max and offer.finances.salary.b2b.min %}
+                                    <div>
+                                        <span class="offer__salary">{{offer.finances.salary.b2b.min}} - {{offer.finances.salary.b2b.max}} PLN</span>
+                                        <span class="offer__contracts">B2B</span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            {% if offer.finances.uop %}
+                                {% if offer.finances.salary.uop.max and offer.finances.salary.uop.min %}
+                                    <div>
+                                        <span class="offer__salary">{{offer.finances.salary.uop.min}} - {{offer.finances.salary.uop.max}} PLN</span>
+                                        <span class="offer__contracts">UOP</span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="item__row item__link">
+                    <a href="{{ offer.offer__link }}" class="offer__link">external offer link</a>
+                </div>
+            </article>
+            {% endfor %}
         </div>
     </section>
     

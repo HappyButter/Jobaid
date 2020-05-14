@@ -185,6 +185,13 @@
     /* justify-content: center; */
 }
 
+.details__salary {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
 .language__item, .technology__item {
     /* flex: 1; */
     display: block;
@@ -222,4 +229,61 @@
 
 .offer__link:hover {
     cursor: pointer;
+}
+
+
+/* temporary admin */
+
+.admin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin__form {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+}
+
+.admin__image {
+    width: 200px;
+    display: block;
+    margin: 0 auto;
+}
+
+.admin__file {
+    padding: 3px;
+    background-color: #fff;
+    font-size: 1em;
+    width: 100%;
+}
+
+.admin__password, .admin__file {
+    width: 300px;
+    margin: 5px auto;
+}
+
+.password__label {
+    width: 300px;
+    margin: 5px auto;
+}
+
+.admin__subtitle {
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    font-weight: 400;
+    padding: 10px 0;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.admin__phrase {
+    font-size: 1.2em;
+    font-weight: 300;
+    padding: 10px 0;
+    /* margin-bottom: 10px; */
+    color: rgb(131, 131, 131);
+    text-align: center;  
 }

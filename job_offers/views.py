@@ -10,6 +10,15 @@ def div_technologies(f_technologies):
         return f_technologies_list
     return None
 
+def admin(request):
+    context = {
+        "title": "Job Offers",
+        'app': 'job_offers',
+        'page': 'offers'
+    }
+    return render(request, 'job_offers/admin.html', context)
+    
+
 def joboffers(request):
     context = {
         "title": "Job Offers",
