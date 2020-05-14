@@ -73,7 +73,7 @@ class NoFluffJobsSpider(Spider):
 
     def __get_finances(self, ancestor):
         finances = {
-            'contract' : {
+            'contracts' : {
                 'b2b': False,
                 'uop': False
             },
@@ -85,7 +85,7 @@ class NoFluffJobsSpider(Spider):
         contracts = list(zip(ancestor.css('.salary .type::text').getall(), ancestor.css('.salary .mb-0::text').getall()))
         for contract in contracts:
             if contract[0].strip() == '+ vat (B2B) miesięcznie':
-                finances['contract']['b2b'] = True
+                finances['contracts']['b2b'] = True
                 forks = contract[1].replace(' ', '').replace("PLN", "")
                 separator = forks.find("-")
                 finances['salary']['b2b'] = {
@@ -93,7 +93,7 @@ class NoFluffJobsSpider(Spider):
                     'max': int(forks[separator + 1:])
                 }
             if contract[0].strip() == '+ vat (B2B) godzinowo':
-                finances['contract']['b2b'] = True
+                finances['contracts']['b2b'] = True
                 forks = contract[1].replace(' ', '').replace("PLN", "")
                 separator = forks.find("-")
                 finances['salary']['b2b'] = {
@@ -101,7 +101,7 @@ class NoFluffJobsSpider(Spider):
                     'max': 168 * int(forks[separator + 1:])
                 }
             if contract[0].strip() == '+ vat (B2B) dziennie':
-                finances['contract']['b2b'] = True
+                finances['contracts']['b2b'] = True
                 forks = contract[1].replace(' ', '').replace("PLN", "")
                 separator = forks.find("-")
                 finances['salary']['b2b'] = {
@@ -109,7 +109,7 @@ class NoFluffJobsSpider(Spider):
                     'max': 21 * int(forks[separator + 1:])
                 }
             if contract[0].strip() == 'brutto (umowa o pracę) miesięcznie':
-                finances['contract']['uop'] = True
+                finances['contracts']['uop'] = True
                 forks = contract[1].replace(' ', '').replace("PLN", "")
                 separator = forks.find("-")
                 finances['salary']['uop'] = {
@@ -139,7 +139,7 @@ class NoFluffJobsSpider(Spider):
         offer['technologies'] = list(skills_set - lang_set)
         finances = self.__get_finances(ancestor)
         offer['finances'] = {
-            'contract' : finances['contract'],
+            'contracts' : finances['contracts'],
             'salary' : finances['salary']
         }
         offer_url = ancestor.url
