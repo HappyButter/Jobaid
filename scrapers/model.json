@@ -1,11 +1,11 @@
 {
     "title": "position name",
     "company": "company name",
-    "companiy_size": 2000,
+    "company_size": 2000,
     "location": {
         "address": "full company address"
     },
-    "expirience_level": "junior/mid/senior",
+    "experience_level": "junior/mid/senior",
     "languages": ["js", "Python", "..."],
     "technologies": ["react", "django", "..."],
     "finances": {
