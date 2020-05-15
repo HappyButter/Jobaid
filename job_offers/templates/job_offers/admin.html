@@ -5,7 +5,8 @@
 {% block content %}
     
 <section class="content__section admin">
-    <form action="/" method="POST" enctype="multipart/form-data" class="admin__form">
+    <form action="" method="POST" enctype="multipart/form-data" class="admin__form">
+        {% csrf_token %}
         <img src="{% static 'images/fingerprint.png' %}" alt="" class="admin__image">
         <h2 class="admin__subtitle">So you pretend to be an admin?</h2>
         <h2 class="admin__subtitle">PROVE IT!</h2>
