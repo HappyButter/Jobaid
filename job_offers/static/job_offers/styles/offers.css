@@ -287,3 +287,18 @@
     color: rgb(131, 131, 131);
     text-align: center;  
 }
+
+.admin__submit {
+    width: 300px;
+    margin: 5px auto;
+    border: none;
+    border-radius: 3px;
+    background-color: rgb(75, 75, 75);
+    color: white;
+    text-decoration: uppercase;
+    font-size: 1em;
+    padding: 5px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
