@@ -64,7 +64,7 @@ def joboffers(request):
 
         print(query)
 
-        offers = JobPosition.objects(query)
+        offers = JobPosition.objects(query)[:20]
         
         print(f'znalezione oferty: {offers}')
         context['offers'] = offers

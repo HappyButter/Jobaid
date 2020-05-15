@@ -170,9 +170,9 @@
                         {% endfor %}
                     </div>
                     <div class="offer__finances">
-                        <span class="details__prefix">salary:</span>
+                        <span class="details__prefix details__salary">salary:</span>
                         <div>
-                            {% if offer.finances.b2b %}
+                            {% if offer.finances.contracts.b2b %}
                                 {% if offer.finances.salary.b2b.max and offer.finances.salary.b2b.min %}
                                     <div>
                                         <span class="offer__salary">{{offer.finances.salary.b2b.min}} - {{offer.finances.salary.b2b.max}} PLN</span>
@@ -180,7 +180,7 @@
                                     </div>
                                 {% endif %}
                             {% endif %}
-                            {% if offer.finances.uop %}
+                            {% if offer.finances.contracts.uop %}
                                 {% if offer.finances.salary.uop.max and offer.finances.salary.uop.min %}
                                     <div>
                                         <span class="offer__salary">{{offer.finances.salary.uop.min}} - {{offer.finances.salary.uop.max}} PLN</span>
