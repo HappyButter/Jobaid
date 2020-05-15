@@ -1,0 +1,30 @@
+.nav__list {
+    margin-right: 30px;
+    display: flex;
+    list-style-type: none;
+    flex-basis: 40%;
+    max-width: 530px;
+    justify-content: space-between;
+    align-items: center;
+
+
+}
+
+.nav__item {
+
+}
+
+.nav__link {
+    font-size: 1.1em;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: rgb(240, 240, 240);
+    text-decoration: none;
+}
+
+.nav__link:hover {
+    background-color: rgba(148, 148, 148, 0.801);
+    color: rgb(255, 255, 255);
+    transition: all ease-in-out 0.3s;
+}
