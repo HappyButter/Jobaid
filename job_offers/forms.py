@@ -11,7 +11,7 @@ class FilterForm(forms.Form):
     experience_level = forms.MultipleChoiceField(choices=EXPERIENCE_CHOICES) 
     b2b = forms.BooleanField()
     uop = forms.BooleanField()
-    address = forms.CharField(max_length=100)
+    location = forms.CharField(max_length=100)
     fork_min = forms.IntegerField()
     fork_max = forms.IntegerField()
 
