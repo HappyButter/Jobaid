@@ -24,6 +24,7 @@ class JobPosition(Document):
     company_size = fields.IntField(min_value = 0)
 
     experience_level = fields.StringField(max_length=100)
+
     languages = fields.ListField(fields.StringField())
     technologies = fields.ListField(fields.StringField())
 
