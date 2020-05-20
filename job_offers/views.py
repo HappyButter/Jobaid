@@ -91,7 +91,7 @@ def create_query(form):
 
     experience_level = form['experience_level'].value()
     if experience_level != ['']:
-        query = Q(experience_level__in=experience_level) | query
+        query = Q(experience_level__in=experience_level) & query
 
     b2b = form['b2b'].value()
     if b2b != None and b2b != False:
