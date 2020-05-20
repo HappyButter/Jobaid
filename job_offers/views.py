@@ -6,9 +6,13 @@ from mongoengine.queryset.visitor import Q
 
 def div_technologies(f_technologies):
     if f_technologies != None and f_technologies != '':
-        f_technologies_list = f_technologies.split(",")
-        for tech in f_technologies_list:
-            tech.strip()
+
+        f_technologies_list = [tech.strip() for tech in f_technologies.split(',')]
+
+        # f_technologies_list = f_technologies.split(",")
+        # for tech in f_technologies_list:
+        #     tech = tech.strip()
+
         return f_technologies_list
     return None
     
@@ -30,8 +34,8 @@ def joboffers(request):
         if f_technologies_list != None:
             for technology in f_technologies_list:
                 tech_query = Q()
-                tech_query = Q(technologies__iexact=technology) | tech_query
                 tech_query = Q(languages__iexact=technology) | tech_query
+                tech_query = Q(technologies__iexact=technology) | tech_query
                 query = tech_query & query
 
         # f_experience_level = form['experience_level'].value()
@@ -64,11 +68,11 @@ def joboffers(request):
         except:
             f_fork_max = None
 
-        print(query)
+        # print(query)
 
         offers = JobPosition.objects(query)[:20]
         
-        print(f'znalezione oferty: {offers}')
+        # print(f'znalezione oferty: {offers}')
         context['offers'] = offers
     else:
         form = FilterForm()
