@@ -3,18 +3,6 @@ from .forms import FilterForm, DataForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
 from mongoengine.queryset.visitor import Q
-
-def div_technologies(f_technologies):
-    if f_technologies != None and f_technologies != '':
-
-        f_technologies_list = [tech.strip() for tech in f_technologies.split(',')]
-
-        # f_technologies_list = f_technologies.split(",")
-        # for tech in f_technologies_list:
-        #     tech = tech.strip()
-
-        return f_technologies_list
-    return None
     
 
 def joboffers(request):
@@ -26,61 +14,14 @@ def joboffers(request):
 
     if request.method == 'POST':
         form = FilterForm(request.POST)
-
-        query = Q()
-
-        f_technologies = form['technologies'].value()
-        f_technologies_list = div_technologies(f_technologies)
-        if f_technologies_list != None:
-            for technology in f_technologies_list:
-                tech_query = Q()
-                tech_query = Q(languages__iexact=technology) | tech_query
-                tech_query = Q(technologies__iexact=technology) | tech_query
-                query = tech_query & query
-
-        # f_experience_level = form['experience_level'].value()
-        # if f_experience_level != None:
-        #     query = Q(experience_level__in=f_experience_level) | query
-
-        f_b2b = form['b2b'].value()
-        if f_b2b != None and f_b2b != False:
-            query = Q(finances__contracts__b2b=f_b2b) & query
-
-        f_uop = form['uop'].value()
-        if f_uop != None and f_uop != False:
-            query = Q(finances__contracts__uop=f_uop) & query
-
-        f_location = form['location'].value()
-        if f_location != None and f_location != '':
-            query = Q(location__address__iexact=f_location) & query
-
-        f_fork_min = form['fork_min'].value()
-        try:
-            f_fork_min = int(f_fork_min)
-            query = Q(finances__salary__b2b__min__gte=f_fork_min) & query
-        except:
-            f_fork_min = None
-            
-        f_fork_max = form['fork_max'].value()
-        try:
-            f_fork_max = int(f_fork_max)
-            query = Q(finances__salary__b2b__max__lte=f_fork_max) & query
-        except:
-            f_fork_max = None
-
-        # print(query)
-
+        query = create_query(form)
         offers = JobPosition.objects(query)[:20]
-        
-        # print(f'znalezione oferty: {offers}')
         context['offers'] = offers
     else:
         form = FilterForm()
         context['form'] = form
         context['offers'] = offers = JobPosition.objects()[:10]
     return render(request, 'job_offers/content.html', context)
-
-
 
 def json_dict_to_model(json_dict):
     job_offer = JobOffer()
@@ -129,3 +70,53 @@ def admin(request):
         return render(request, 'job_offers/content.html', context)
 
     return render(request, 'job_offers/admin.html', context)
+
+
+def div_technologies(technologies):
+    if technologies != None and technologies != '':
+        technologies_list = [tech.strip() for tech in technologies.split(',')]
+        return technologies_list
+    return None
+
+def create_query(form):
+    query = Q()
+    technologies = form['technologies'].value()
+    technologies_list = div_technologies(technologies)
+    if technologies_list != None:
+        for technology in technologies_list:
+            tech_query = Q()
+            tech_query = Q(languages__iexact=technology) | tech_query
+            tech_query = Q(technologies__iexact=technology) | tech_query
+            query = tech_query & query
+
+    experience_level = form['experience_level'].value()
+    if experience_level != '':
+        query = Q(experience_level__in=experience_level) | query
+
+    b2b = form['b2b'].value()
+    if b2b != None and b2b != False:
+        query = Q(finances__contracts__b2b=b2b) & query
+
+    uop = form['uop'].value()
+    if uop != None and uop != False:
+        query = Q(finances__contracts__uop=uop) & query
+
+    location = form['location'].value()
+    if location != None and location != '':
+        query = Q(location__address__iexact=location) & query
+
+    fork_min = form['fork_min'].value()
+    try:
+        fork_min = int(fork_min)
+        query = Q(finances__salary__b2b__min__gte=fork_min) & query
+    except:
+        fork_min = None
+        
+    fork_max = form['fork_max'].value()
+    try:
+        fork_max = int(fork_max)
+        query = Q(finances__salary__b2b__max__lte=fork_max) & query
+    except:
+        fork_max = None
+
+    return query
