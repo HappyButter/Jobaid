@@ -28,7 +28,11 @@ def joboffers(request):
         f_technologies = form['technologies'].value()
         f_technologies_list = div_technologies(f_technologies)
         if f_technologies_list != None:
-            query = Q(technologies__in=f_technologies_list) & query
+            for technology in f_technologies_list:
+                tech_query = Q()
+                tech_query = Q(technologies__iexact=technology) | tech_query
+                tech_query = Q(languages__iexact=technology) | tech_query
+                query = tech_query & query
 
         # f_experience_level = form['experience_level'].value()
         # if f_experience_level != None:
@@ -53,14 +57,12 @@ def joboffers(request):
         except:
             f_fork_min = None
             
-
         f_fork_max = form['fork_max'].value()
         try:
             f_fork_max = int(f_fork_max)
             query = Q(finances__salary__b2b__max__lte=f_fork_max) & query
         except:
             f_fork_max = None
-
 
         print(query)
 
