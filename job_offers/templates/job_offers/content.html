@@ -16,6 +16,7 @@
             <div class="form__item experience">
                 <label class="form__label experience__title">experience:</label>
                 <select name="experience_level" class="form__input experience__select">
+                    <option class="experience__option" value="">all</option>
                     <option class="experience__option" value="junior">junior</option>
                     <option class="experience__option" value="mid">mid</option>
                     <option class="experience__option" value="senior">senior</option>
@@ -71,11 +72,11 @@
                     <div class="offer__technologies">
                         <span class="details__prefix">technologies:</span>
                         {% for tech in offer.technologies %}
-                            <span class="language__item">{{ tech }}</span>
+                            <span class="technology__item">{{ tech }}</span>
                         {% endfor %}
                     </div>
                     <div class="offer__finances">
-                        <span class="details__prefix ">salary:</span>
+                        <span class="details__prefix details__salary">salary:</span>
                         <div>
                             {% if offer.finances.contracts.b2b %}
                                 {% if offer.finances.salary.b2b.max and offer.finances.salary.b2b.min %}
