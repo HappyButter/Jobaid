@@ -50,8 +50,13 @@ nav {
 
 main {
     flex-grow: 1;
+    padding: 20px;
     /* background-color: rgb(190, 190, 190); */
     background-color: rgba(228, 228, 228, 0.5);
+    /* margin: 0 auto; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 footer {

@@ -24,12 +24,13 @@ class JobPosition(Document):
     company_size = fields.IntField(min_value = 0)
 
     experience_level = fields.StringField(max_length=100)
-    languages = fields.ListField(fields.StringField(max_length=20))
-    technologies = fields.ListField(fields.StringField(max_length=40))
+
+    languages = fields.ListField(fields.StringField())
+    technologies = fields.ListField(fields.StringField())
 
     finances = fields.EmbeddedDocumentField(Finances)
 
-    offer_hash = fields.StringField(max_length=32)
+    hash = fields.StringField(max_length=62)
 
     meta = {'allow_inheritance': True}
 
