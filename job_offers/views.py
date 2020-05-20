@@ -73,6 +73,7 @@ def joboffers(request):
     else:
         form = FilterForm()
         context['form'] = form
+        context['offers'] = offers = JobPosition.objects()[:10]
     return render(request, 'job_offers/content.html', context)
 
 
