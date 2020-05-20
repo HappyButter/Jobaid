@@ -90,7 +90,7 @@ def create_query(form):
             query = tech_query & query
 
     experience_level = form['experience_level'].value()
-    if experience_level != '':
+    if experience_level != ['']:
         query = Q(experience_level__in=experience_level) | query
 
     b2b = form['b2b'].value()
