@@ -12,7 +12,7 @@ class Finances(EmbeddedDocument):
 
 
 class Location(EmbeddedDocument):
-    address = fields.StringField(max_length=50)
+    address = fields.StringField()
     coordinates = fields.GeoPointField()
     
 
