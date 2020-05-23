@@ -94,6 +94,8 @@ def create_query(form):
             tech_query = Q(technologies__iexact=technology) | tech_query
             query = tech_query & query
 
+    query = (Q(technologies__not__size=0) | Q(languages__not__size=0)) & query
+
     experience_level = form['experience_level'].value()
     if experience_level != ['']:
         query = Q(experience_level__in=experience_level) & query
