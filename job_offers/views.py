@@ -48,9 +48,11 @@ def json_dict_to_model(json_dict):
     finances['salary'] = salary
     finances['contracts'] = json_dict['finances']['contracts']
     job_offer['finances'] = finances
-    job_offer['hash'] = json_dict['hash']
+    job_offer['offer_hash'] = json_dict['offer_hash']
     job_offer['offer_link'] = json_dict['offer_link']
     job_offer['source_page'] = json_dict['source_page']
+    job_offer['date'] = json_dict['date']
+    job_offer['active'] = json_dict['active']
     job_offer.save()
 
 def handle_uploaded_file(json_file):
@@ -67,12 +69,9 @@ def admin(request):
         'page': 'offers'
     }
     if request.method == 'POST':
-        print("POST FILE REQUEST")
-        data_json = DataForm(request.POST, request.FILES)
-        if data_json.is_valid():
-            print("VALID FORM")
-            handle_uploaded_file(request.FILES['datafile'])
-            print("FINISHED")
+        print("ADDING FILE")
+        handle_uploaded_file(request.FILES['datafile'])
+        print("FINISHED")
         return render(request, 'job_offers/content.html', context)
 
     return render(request, 'job_offers/admin.html', context)
