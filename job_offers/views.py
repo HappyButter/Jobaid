@@ -12,14 +12,13 @@ def joboffers(request):
         'app': 'job_offers',
         'page': 'offers'
     }
-    offers = []
 
     if request.method == 'POST':
         form = FilterForm(request.POST)
         query = create_query(form)
         offers = JobPosition.objects(query)
     else:
-        offers = JobPosition.objects.all()
+        offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
 
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
@@ -83,6 +82,9 @@ def div_technologies(technologies):
         return technologies_list
     return None
 
+def create_query_with_excluded_empty_technologies():
+    return Q(technologies__not__size=0) | Q(languages__not__size=0)
+
 def create_query(form):
     query = Q()
     technologies = form['technologies'].value()
@@ -94,7 +96,7 @@ def create_query(form):
             tech_query = Q(technologies__iexact=technology) | tech_query
             query = tech_query & query
 
-    query = (Q(technologies__not__size=0) | Q(languages__not__size=0)) & query
+    query = query & create_query_with_excluded_empty_technologies()
 
     experience_level = form['experience_level'].value()
     if experience_level != ['']:
