@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 from .forms import FilterForm, DataForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
@@ -11,17 +12,22 @@ def joboffers(request):
         'app': 'job_offers',
         'page': 'offers'
     }
+    offers = []
 
     if request.method == 'POST':
         form = FilterForm(request.POST)
         query = create_query(form)
-        offers = JobPosition.objects(query)[:20]
-        context['offers'] = offers
+        offers = JobPosition.objects(query)
     else:
-        form = FilterForm()
-        context['form'] = form
-        context['offers'] = offers = JobPosition.objects()[:10]
+        offers = JobPosition.objects.all()
+
+    paginator = Paginator(offers, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context['page_obj'] = page_obj
+
     return render(request, 'job_offers/content.html', context)
+
 
 def json_dict_to_model(json_dict):
     job_offer = JobOffer()
