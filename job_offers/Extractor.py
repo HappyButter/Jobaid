@@ -3,6 +3,9 @@ import pymongo
 import json
 import environ
 
+TECH_PATH = "../scrapers/info/technologies.json"
+LANG_PATH = "../scrapers/info/languages.json"
+ENV_PATH = "../jobaid/.env"
 
 class Loader():
 
@@ -14,19 +17,19 @@ class Loader():
         with open(self.filename, "r") as file:
             self.loaded_set = json.load(file)
 
-    @property
-    def env(self):
-        envi = environ.Env(
+    @staticmethod
+    def env():
+        envir = environ.Env(
 
         DEBUG=(bool, False)
         )
         # reading .env file
-        environ.Env.read_env()
+        environ.Env.read_env(env_file=ENV_PATH)
 
-        MONGO_USER = envi('MONGO_USER')
-        MONGO_PASS = envi('MONGO_PASS')
-        MONGO_HOST = envi('MONGO_HOST')
-        MONGO_NAME = envi('MONGO_NAME')
+        MONGO_USER = envir('MONGO_USER')
+        MONGO_PASS = envir('MONGO_PASS')
+        MONGO_HOST = envir('MONGO_HOST')
+        MONGO_NAME = envir('MONGO_NAME')
         MONGO_DATABASE_HOST = \
         'mongodb+srv://%s:%s@%s/%s' \
         % (MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_NAME)
@@ -36,7 +39,7 @@ class Loader():
 class DatabaseRecordsGetter():
 
     def __init__(self):
-        self.client = pymongo.MongoClient(Loader().env)
+        self.client = pymongo.MongoClient(Loader.env())
         self.job_position = self.client.jobaid.job_position
 
     def records(self, records_type):
@@ -49,7 +52,7 @@ class DatabaseRecordsGetter():
 
         return records
 
-    def count(self, seeken, records_type, save=False):
+    def count(self, seeken, records_type, threshold=0):
         records = self.records(records_type)
         if not records:
             return
@@ -62,30 +65,13 @@ class DatabaseRecordsGetter():
                     if item.lower()  == element.lower():
                         counter += 1
 
-            occurences[item] = counter
+            if counter >= threshold:
+                occurences[item] = counter
             counter = 0
 
-        sorted_occurences = dict(sorted(occurences.items(), key=lambda x: x[1], reverse=True))
-
-        if save:
-            with open(records_type + "_occurences.json", "w", encoding="utf-8") as f:
-                json.dump(sorted_occurences, f, ensure_ascii=False, indent=4)
-        else:
-            return JsonResponse(sorted_occurences)
+        return JsonResponse(dict(sorted(occurences.items(), key=lambda x: x[1], reverse=True)))
 
 
 if __name__ == "__main__":
-    Ltechno = Loader("technologies.json")
-    Ltechno.load_set()
-    technologies = Ltechno.loaded_set
-
-    Llang = Loader("languages.json")
-    Llang.load_set()
-    languages = Llang.loaded_set
-
-    getter = DatabaseRecordsGetter()
-
-    getter.count(technologies, "technologies", save=True)
-    getter.count(languages, "languages", save=True)
-
+    pass
 
