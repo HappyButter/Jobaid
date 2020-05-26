@@ -231,10 +231,10 @@ def seeker():
     #     ), DEST_FOLDER + data_json[index])
     save_to_json(gather_data(
         browser,
-        page_links[4],
+        page_links[0],
         regex_formula_company_size,
         regex_formula_salary
-    ), DEST_FOLDER + data_json[4])
+    ), DEST_FOLDER + data_json[0])
 
     browser.quit()
 
