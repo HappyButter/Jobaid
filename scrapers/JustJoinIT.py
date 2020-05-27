@@ -1,18 +1,25 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from forex_python.converter import CurrencyRates
 from hashlib import blake2b
 from time import sleep
+from datetime import date
+
 import json
 
 
 class JustJoinIT:
 
     def __init__(self):
-        self.languages = ["java", "c#", "c", "c++", "python", "javascript", "typescript", "r", "php", "ruby", "html5", "html", "css3", "scss", "css", "kotlin", "swift", "flutter", "sql", "scala", "rust", "go", "vba", "ruby", "objective-c", "nosql", "dart", "golang", "matlab"]
-        self.EUR = 4.54
-        self.USD = 4.20
-        self.GBP = 5.20
+        c = CurrencyRates()
+        self.languages = ["Swift", "Assembler", "Pascal", "Elixir", "CSS3", "Scala", "HTML", "NoSQL", "Python", "Ruby", "C#", "Fortran", "Lisp", "Matlab","Objective-C", "HTML5", "Go", "SCSS", "Erlang", "PHP", "Kotlin", "SQL", "Rust", "Flutter", "Julia", "CSS", "C++", "Golang", "TypeScript", "JavaScript", "C", "Java", "VBA", "R", "Lua", "Dart"]
+        self.languages_lower = ['swift', 'assembler', 'pascal', 'elixir', 'css3', 'scala', 'html', 'nosql', 'python', 'ruby', 'c#', 'fortran', 'lisp', 'matlab', 'objective-c', 'html5', 'go', 'scss', 'erlang', 'php', 'kotlin', 'sql', 'rust', 'flutter', 'julia', 'css', 'c++', 'golang', 'typescript', 'javascript', 'c', 'java', 'vba', 'r', 'lua', 'dart']
+        self.EUR = c.get_rate('EUR', 'PLN')
+        self.USD = c.get_rate('USD', 'PLN')
+        self.GBP = c.get_rate('GBP', 'PLN')
+        print(" EUR:", self.EUR, " USD:", self.USD, " GBP:", self.GBP)
         self.links = []
+        self.today = date.today()
 
         self.driver = webdriver.Firefox()
         self.driver.get("https://justjoin.it/")
@@ -101,19 +108,19 @@ class JustJoinIT:
         return company_info.text
 
 
-    def get_contract(self, contract_info):
-        contract = {
+    def get_contracts(self, contracts_info):
+        contracts = {
             'b2b' : False,
             'uop' : False
         }
 
-        if contract_info.text == "b2b":
-            contract['b2b'] = True
+        if contracts_info.text == "b2b":
+            contracts['b2b'] = True
 
-        if contract_info.text == "permanent":
-            contract['uop'] = True
+        if contracts_info.text == "permanent":
+            contracts['uop'] = True
 
-        return contract            
+        return contracts           
 
 
     def get_min_max_payment(self):
@@ -176,12 +183,12 @@ class JustJoinIT:
         return salary            
 
 
-    def get_finances(self, contract_info):
-        contract = self.get_contract(contract_info)
-        salary = self.get_salary(contract_info)
+    def get_finances(self, contracts_info):
+        contracts = self.get_contracts(contracts_info)
+        salary = self.get_salary(contracts_info)
 
         finances = {}
-        finances['contract'] = contract
+        finances['contracts'] = contracts
         finances['salary'] = salary
 
         return finances
@@ -192,10 +199,11 @@ class JustJoinIT:
         technologies = []
 
         for skill in tech_stack:
-            if skill.text.lower() in self.languages:
-                languages.append(skill.text.lower())
-            else:
-                technologies.append(skill.text.lower())
+            try:
+                index = self.languages_lower.index(skill.text.lower())
+                languages.append(self.languages[index])
+            except:
+                technologies.append(skill.text)
         
         return languages, technologies
     
@@ -207,30 +215,33 @@ class JustJoinIT:
         return h.hexdigest()
 
 
+    def get_date(self):
+        return self.today.strftime("%d-%m-%Y")
+
+
     def parse_to_dict(self, link):
         self.driver.get(link)
         sleep(1)
         
         company_size__contract_type__level = self.driver.find_elements_by_class_name('css-1ji7bvd')
         tech_stack = self.driver.find_elements_by_class_name('css-1eroaug')
-        
+        languages, technologies = self.get_languages_and_technologies(tech_stack)
+
         offer = {}
 
         offer['title'] = self.get_title()
         offer['company'] = self.get_company_name()
         offer['company_size'] = self.get_company_size(company_size__contract_type__level[0])
         offer['location'] = self.get_location()
-        offer['expirience_level'] = self.get_level(company_size__contract_type__level[2])
-        
-        languages, technologies = self.get_languages_and_technologies(tech_stack)
+        offer['experience_level'] = self.get_level(company_size__contract_type__level[2])
         offer['languages'] = list(languages)
         offer['technologies'] = list(technologies)
         offer['finances'] = self.get_finances(company_size__contract_type__level[1])
-        offer['hash'] = self.generate_hash(offer)
-
+        offer['offer_hash'] = self.generate_hash(offer)
+        offer['offer_link'] = link
         offer['source_page'] = self.source_page()
-        offer['link'] = link
-
+        offer['date'] = self.get_date()
+        offer['active'] = True
         return offer
 
 
@@ -249,9 +260,14 @@ class JustJoinIT:
                 pass
 
             if count % 20 == 0:
-                print("progress: " + str( int((iter/progress_bar) * 100) ) + "%")
+                percent = int(100*count/progress_bar)
+                print("progress: ", str( percent ), " % ")
 
         with open('JustJoinIT.json', 'w', encoding='utf-8') as data_file:        
             json.dump(data, data_file, ensure_ascii=False, indent=4)   
         
         print("Done")
+
+if __name__ == "__main__":
+    a = JustJoinIT()
+    a.parse()
