@@ -52,7 +52,34 @@
     </form>
     </section>
     <section class="content__section offers">
-        <h2 class="content__subtitle offers__title">Matched job offers:</h2>
+        <h2 class="content__subtitle offers__title">Matched job offers:  ({% if is_paginated %} {{ offers_amount }} {% endif %})</h2>
+        {% if is_paginated %}
+        <div class="offers__pagination">
+            <div class="pagination__btns">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="pagination__btn">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination__btn">Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a href="?page={{ num }}" class="pagination__btn pagination__btn-current">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}" class="pagination__btn">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination__btn">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination__btn">Last</a>
+                {% endif %}
+            </div>
+            <div class="pagination__count">
+                Page <span>{{ page_obj.number }}</span> out of <span>{{ page_obj.paginator.num_pages }}</span>
+            </div>
+        </div>
+
+        {% endif %}
         <div class="offer__list">
             {% for offer in page_obj %}
             <article class="offer__item">
@@ -103,22 +130,33 @@
             </article>
             {% endfor %}
         </div>
-        <!-- <div class="offers__pagination">
+        {% if is_paginated %}
+        <div class="offers__pagination">
             <div class="pagination__btns">
-                <button class="pagination__btn">first</button>
-                <button class="pagination__btn">previous</button>
-                <button class="pagination__btn">5</button>
-                <button class="pagination__btn">6</button>
-                <button class="pagination__btn">7*</button>
-                <button class="pagination__btn">8</button>
-                <button class="pagination__btn">9</button>
-                <button class="pagination__btn">next</button>
-                <button class="pagination__btn">last</button>
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="pagination__btn">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination__btn">Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a href="?page={{ num }}" class="pagination__btn pagination__btn-current">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}" class="pagination__btn">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination__btn">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination__btn">Last</a>
+                {% endif %}
             </div>
             <div class="pagination__count">
-                Page <span>4</span> out of <span>230</span>
+                Page <span>{{ page_obj.number }}</span> out of <span>{{ page_obj.paginator.num_pages }}</span>
             </div>
-        </div> -->
+        </div>
+
+        {% endif %}
     </section>
     
 
