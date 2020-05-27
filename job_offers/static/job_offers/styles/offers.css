@@ -302,3 +302,48 @@
     letter-spacing: 1px;
     cursor: pointer;
 }
+
+
+
+
+
+
+.offers__pagination {
+    position: relative;
+    margin: 10px auto;
+    width: 100%;
+}
+
+.pagination__count {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+
+}
+
+.pagination__btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination__btn {
+    padding: 10px;
+    margin: 5px;
+    font-size: 1em;
+    min-width: 50px;
+    background-color: rgb(228, 185, 105);
+    border: 2px solid rgb(51, 51, 51);
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #4B4B4B;
+}
+
+.pagination__btn-current {
+    font-size: 1em;
+    background-color: rgb(226, 238, 96);
+}

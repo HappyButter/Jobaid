@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 from .forms import FilterForm, DataForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
@@ -11,17 +12,25 @@ def joboffers(request):
         'app': 'job_offers',
         'page': 'offers'
     }
+    offers = []
 
     if request.method == 'POST':
         form = FilterForm(request.POST)
         query = create_query(form)
-        offers = JobPosition.objects(query)[:20]
-        context['offers'] = offers
+        offers = JobPosition.objects(query)
     else:
-        form = FilterForm()
-        context['form'] = form
-        context['offers'] = offers = JobPosition.objects()[:10]
+        offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
+        # offers = JobPosition.objects.all()
+
+    paginator = Paginator(offers, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context['page_obj'] = page_obj
+    context['is_paginated'] = True
+    context['offers_amount'] = len(offers)
+
     return render(request, 'job_offers/content.html', context)
+
 
 def json_dict_to_model(json_dict):
     job_offer = JobOffer()
@@ -77,6 +86,9 @@ def div_technologies(technologies):
         return technologies_list
     return None
 
+def create_query_with_excluded_empty_technologies():
+    return Q(technologies__not__size=0) | Q(languages__not__size=0)
+
 def create_query(form):
     query = Q()
     technologies = form['technologies'].value()
@@ -88,9 +100,11 @@ def create_query(form):
             tech_query = Q(technologies__iexact=technology) | tech_query
             query = tech_query & query
 
+    query = query & create_query_with_excluded_empty_technologies()
+
     experience_level = form['experience_level'].value()
     if experience_level != ['']:
-        query = Q(experience_level__in=experience_level) | query
+        query = Q(experience_level__in=experience_level) & query
 
     b2b = form['b2b'].value()
     if b2b != None and b2b != False:
