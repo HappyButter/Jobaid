@@ -31,9 +31,9 @@
             <div class="form__item contracts">
                 <label class="form__label contracts__title">contracts:</label>
                 <div class="contracts__container">
-                    <input type="checkbox" name="b2b" class="contracts__checkbox" checked="false">
+                    <input type="checkbox" name="b2b" class="contracts__checkbox" {%if form.b2b %} checked="checked" {% endif %}>
                     <label class="form__label contracts__label">B2B</label>
-                    <input type="checkbox" name="uop" class="contracts__checkbox" checked="{{ form.uop}}">
+                    <input type="checkbox" name="uop" class="contracts__checkbox" {%if form.uop %} checked="checked" {% endif %}>
                     <label class="form__label contracts__label">UOP</label>
                 </div>
             </div>
