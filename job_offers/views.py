@@ -16,6 +16,15 @@ def joboffers(request):
 
     if request.method == 'POST':
         form = FilterForm(request.POST)
+        context['form'] = {
+            'technologies': form['technologies'].value(),
+            'experience_level': form['experience_level'].value(),
+            'location': form['location'].value(),
+            'b2b': form['b2b'].value(),
+            'uop': form['uop'].value(),
+            'fork_min': form['fork_min'].value(),
+            'fork_max': form['fork_max'].value()
+        }
         query = create_query(form)
         offers = JobPosition.objects(query)
     else:

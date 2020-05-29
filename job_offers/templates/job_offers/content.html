@@ -10,12 +10,12 @@
         {% csrf_token %}
         <div class="form__row">
             <div class="form__item technologies">
-                <label class="form__label technologies__title">technologies:</label>
-                <input type="text" name="technologies" class="form__input technologies__input">
+                <label class="form__label technologies__title"">technologies:</label>
+                <input type="text" name="technologies" class="form__input technologies__input"  placeholder="Java, Spring, ..." value="{{ form.technologies }}">
             </div>
             <div class="form__item experience">
                 <label class="form__label experience__title">experience:</label>
-                <select name="experience_level" class="form__input experience__select">
+                <select name="experience_level" class="form__input experience__select" value="{{ form.experience_level }}">
                     <option class="experience__option" value="">all</option>
                     <option class="experience__option" value="junior">junior</option>
                     <option class="experience__option" value="mid">mid</option>
@@ -26,23 +26,23 @@
         <div class="form__row">  
             <div class="form__item location">
                 <label class="form__label location__title">location:</label>
-                <input type="text" name="location" class="form__input location__input">
+                <input type="text" name="location" class="form__input location__input" placeholder="Warszawa" value="{{ form.location }}">
             </div>
             <div class="form__item contracts">
                 <label class="form__label contracts__title">contracts:</label>
                 <div class="contracts__container">
-                    <input type="checkbox" name="b2b" class="contracts__checkbox">
+                    <input type="checkbox" name="b2b" class="contracts__checkbox" checked="false">
                     <label class="form__label contracts__label">B2B</label>
-                    <input type="checkbox" name="uop" class="contracts__checkbox">
+                    <input type="checkbox" name="uop" class="contracts__checkbox" checked="{{ form.uop}}">
                     <label class="form__label contracts__label">UOP</label>
                 </div>
             </div>
             <div class="form__item salary">
                 <label class="form__label salary__title">salary:</label>
                 <div class="salary__container">
-                    <input type="number" name="fork_min" class="form__input salary__input" placeholder="min">
+                    <input type="number" name="fork_min" class="form__input salary__input" placeholder="min" value="{{ form.fork_min }}">
                     <span class="salary__separator">-</span>
-                    <input type="number" name="fork_max" class="form__input salary__input" placeholder="max">
+                    <input type="number" name="fork_max" class="form__input salary__input" placeholder="max" value="{{ form.fork_max }}">
                 </div>
             </div>
         </div>
@@ -84,32 +84,32 @@
             {% for offer in page_obj %}
             <article class="offer__item">
                 <div class="item__row item__title">
-                    <span class="offer__name">{{ offer.title }}</span>
-                    <span class="offer__experience">{{ offer.experience_level }}</span>
-                    <span class="offer__location">{{ offer.location.address }}</span>
+                    <span class="offer__name"><i class="fas fa-user-tie awesome-icon"></i> {{ offer.title }}</span>
+                    <span class="offer__experience"><i class="fas fa-graduation-cap"></i> {{ offer.experience_level }}</span>
+                    <span class="offer__location"><i class="fas fa-city"></i> {{ offer.location.address }}</span>
                 </div>
                 <div class="item__row item__details">
 
                     <div class="offer__languages">
-                        <span class="details__prefix">languages:</span>
+                        <span class="details__prefix"><i class="fas fa-code awesome-icon"></i> languages:</span>
                         {% for lang in offer.languages %}
                             <span class="language__item">{{ lang }}</span>
                         {% endfor %}
                     </div>
                     <div class="offer__technologies">
-                        <span class="details__prefix">technologies:</span>
+                        <span class="details__prefix"><i class="fas fa-microchip awesome-icon"></i> technologies:</span>
                         {% for tech in offer.technologies %}
                             <span class="technology__item">{{ tech }}</span>
                         {% endfor %}
                     </div>
                     <div class="offer__finances">
-                        <span class="details__prefix details__salary">salary:</span>
+                        <span class="details__prefix details__salary"><span><i class="fas fa-money-check-alt awesome-icon"></i> salary:</span></span>
                         <div>
                             {% if offer.finances.contracts.b2b %}
                                 {% if offer.finances.salary.b2b.max and offer.finances.salary.b2b.min %}
                                     <div>
                                         <span class="offer__salary">{{offer.finances.salary.b2b.min}} - {{offer.finances.salary.b2b.max}} PLN</span>
-                                        <span class="offer__contracts">B2B</span>
+                                        <span class="offer__contracts"><i class="fas fa-file-signature"></i> B2B</span>
                                     </div>
                                 {% endif %}
                             {% endif %}
@@ -117,7 +117,7 @@
                                 {% if offer.finances.salary.uop.max and offer.finances.salary.uop.min %}
                                     <div>
                                         <span class="offer__salary">{{offer.finances.salary.uop.min}} - {{offer.finances.salary.uop.max}} PLN</span>
-                                        <span class="offer__contracts">UOP</span>
+                                        <span class="offer__contracts"><i class="fas fa-file-signature"></i> UOP</span>
                                     </div>
                                 {% endif %}
                             {% endif %}
