@@ -12,6 +12,7 @@ def joboffers(request):
         'app': 'job_offers',
         'page': 'offers'
     }
+    offers = []
 
     if request.method == 'POST':
         form = FilterForm(request.POST)
@@ -19,11 +20,14 @@ def joboffers(request):
         offers = JobPosition.objects(query)
     else:
         offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
+        # offers = JobPosition.objects.all()
 
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context['page_obj'] = page_obj
+    context['is_paginated'] = True
+    context['offers_amount'] = len(offers)
 
     return render(request, 'job_offers/content.html', context)
 
