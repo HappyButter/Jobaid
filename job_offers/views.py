@@ -104,11 +104,11 @@ def create_query(form):
 
     b2b = form['b2b'].value()
     if b2b != None and b2b != False:
-        query = Q(finances__contracts__b2b=b2b) & query
+        query = Q(finances__contracts__b2b=True) & query
 
     uop = form['uop'].value()
     if uop != None and uop != False:
-        query = Q(finances__contracts__uop=uop) & query
+        query = Q(finances__contracts__uop=True) & query
 
     location = form['location'].value()
     if location != None and location != '':
@@ -117,14 +117,14 @@ def create_query(form):
     fork_min = form['fork_min'].value()
     try:
         fork_min = int(fork_min)
-        query = Q(finances__salary__b2b__min__gte=fork_min) & query
+        query = (Q(finances__salary__b2b__min__gte=fork_min) | Q(finances__salary__uop__min__gte=fork_min)) & query
     except:
         fork_min = None
         
     fork_max = form['fork_max'].value()
     try:
         fork_max = int(fork_max)
-        query = Q(finances__salary__b2b__max__lte=fork_max) & query
+        query = (Q(finances__salary__b2b__max__lte=fork_max) | Q(finances__salary__uop__max__lte=fork_max)) & query
     except:
         fork_max = None
 
