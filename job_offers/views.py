@@ -64,24 +64,20 @@ def add_job_position(request):
 
 
 def _make_object_from_form(form):
-    new_position = JobOffer()
+    new_position = JobPosition()
     location = Location()
     finances = Finances()
     salary = Salary()
 
-    # new_position['title']
     location.address= form['location'].value()
-    # location['coordinates']
-    # new_position['company']
     new_position.company_size = form['company_size'].value()
-    
+
     try:
         new_position.experience_level = form['experience_level'].value()[0]
     except:
         new_position.experience_level = None
 
-    # new_position['languages']
-    new_position.technologies = form['technologies'].value()
+    new_position.technologies = div_technologies(form['technologies'].value())
 
     finances.contracts = {'b2b': False, 'uop': False}
     finances.contracts[form['contract'].value()] = True
@@ -100,6 +96,7 @@ def _make_object_from_form(form):
     finances.salary = salary
     new_position.finances = finances
 
+    # for debugging
     print('Succesfuly created new position')
     print('Adres: ', new_position.location.address)
     print('Company size: ', new_position.company_size)
@@ -109,7 +106,6 @@ def _make_object_from_form(form):
     print('b2b: ', new_position.finances.salary.b2b)
     print('uop: ', new_position.finances.salary.uop)
     print('Date: ', new_position.date)
-
 
     return new_position
 

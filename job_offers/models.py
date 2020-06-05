@@ -2,8 +2,8 @@ from mongoengine import fields, Document, EmbeddedDocument
 
 
 class Salary(EmbeddedDocument):
-    b2b = fields.DictField(default={'min': 0, 'max': 0})
-    uop = fields.DictField(default={'min': 0, 'max': 0})
+    b2b = fields.DictField(default={'min': None, 'max': None})
+    uop = fields.DictField(default={'min': None, 'max': None})
 
 
 class Finances(EmbeddedDocument):
@@ -17,20 +17,12 @@ class Location(EmbeddedDocument):
     
 
 class JobPosition(Document):
-    title = fields.StringField()
     location = fields.EmbeddedDocumentField(Location)
-
-    company = fields.StringField(max_length=100)
     company_size = fields.IntField(min_value = 0)
-
     experience_level = fields.StringField(max_length=100)
-
-    languages = fields.ListField(fields.StringField())
     technologies = fields.ListField(fields.StringField())
-
     finances = fields.EmbeddedDocumentField(Finances)
-
-    offer_hash = fields.StringField(max_length=62)
+    date = fields.StringField(max_length=100)
 
     meta = {'allow_inheritance': True}
 
@@ -39,7 +31,10 @@ class JobPosition(Document):
 
 
 class JobOffer(JobPosition):
+    title = fields.StringField()
+    company = fields.StringField(max_length=100)
+    languages = fields.ListField(fields.StringField())
     offer_link = fields.URLField()
     source_page = fields.StringField(max_length=100)
-    date = fields.StringField(max_length=100)
     active = fields.BooleanField(default=True)
+    offer_hash = fields.StringField(max_length=62)
