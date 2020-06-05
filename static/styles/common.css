@@ -1,5 +1,6 @@
 .content__section {
-    min-width: 960px;
+    max-width: 960px;
+    margin: 20px 0;
 }
 
 .content__subtitle {
@@ -16,4 +17,10 @@
     width: 50%;
     height: 1px;
     background-color: rgb(56, 56, 56);
+}
+
+.content__paragraph {
+    text-align: justify;
+    font-size: 1.1em;
+    margin-bottom: 20px;
 }
