@@ -21,7 +21,6 @@ def joboffers(request):
     else:
         offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
         # offers = JobPosition.objects.all()
-    print(request.GET.get('technologies'))
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
