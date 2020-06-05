@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Salary Prediction Page</h2>
-    <h3>form to gather user paramethers</h3>
-    <h3>some fancy image</h3>
-    <h3>output box, with some recomendations, maybe some chart</h3>
+    <h2>Gib wanted parameters</h2>
+    <form action="/salaryprediction/" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
 {% endblock content %}

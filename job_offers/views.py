@@ -20,7 +20,6 @@ def joboffers(request):
         offers = JobPosition.objects(query)
     else:
         offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
-        # offers = JobPosition.objects.all()
 
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
@@ -82,7 +81,7 @@ def admin(request):
 
 def div_technologies(technologies):
     if technologies != None and technologies != '':
-        technologies_list = [tech.strip() for tech in technologies.split(',')]
+        technologies_list = [tech.strip() for tech in technologies.split(',') if tech.strip() != '']
         return technologies_list
     return None
 
