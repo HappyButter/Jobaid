@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from .forms import FilterForm, DataForm
+from .forms import FilterForm, DataForm, AddPositionForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
 from mongoengine.queryset.visitor import Q
-    
+from datetime import date
+from hashlib import blake2b
 
 def joboffers(request):
     context = {
@@ -30,6 +31,87 @@ def joboffers(request):
 
     return render(request, 'job_offers/content.html', context)
 
+def admin(request):
+    context = {
+        "title": "Job Offers",
+        'app': 'job_offers',
+        'page': 'offers'
+    }
+    if request.method == 'POST':
+        print("ADDING FILE")
+        handle_uploaded_file(request.FILES['datafile'])
+        print("FINISHED")
+        return render(request, 'job_offers/content.html', context)
+
+    return render(request, 'job_offers/admin.html', context)
+
+def add_job_position(request):
+    context = {
+        "title": "Job Offers",
+        'app': 'job_offers',
+        'page': 'offers'
+    }
+    offers = []
+
+    if request.method == 'POST':
+        form = AddPositionForm(request.POST)
+        new_job_position = _make_object_from_form(form)
+    else:
+        form = AddPositionForm()
+        context['form'] = form
+
+    return render(request, 'job_offers/add_position.html', context)
+
+
+def _make_object_from_form(form):
+    new_position = JobOffer()
+    location = Location()
+    finances = Finances()
+    salary = Salary()
+
+    # new_position['title']
+    location.address= form['location'].value()
+    # location['coordinates']
+    # new_position['company']
+    new_position.company_size = form['company_size'].value()
+    
+    try:
+        new_position.experience_level = form['experience_level'].value()[0]
+    except:
+        new_position.experience_level = None
+
+    # new_position['languages']
+    new_position.technologies = form['technologies'].value()
+
+    finances.contracts = {'b2b': False, 'uop': False}
+    finances.contracts[form['contract'].value()] = True
+    if 'b2b' == form['contract'].value():
+        finances.contracts.b2b = True
+        salary.b2b['min'] = form['salary_from'].value()
+        salary.b2b['max'] = form['salary_to'].value()
+    else:
+        finances.contracts.uop = True
+        salary.uop['min'] = form['salary_from'].value()
+        salary.uop['max'] = form['salary_to'].value()
+
+    new_position.date = date.today()
+
+    new_position.location = location
+    finances.salary = salary
+    new_position.finances = finances
+
+    print('Succesfuly created new position')
+    print('Adres: ', new_position.location.address)
+    print('Company size: ', new_position.company_size)
+    print('Experience Level: ', new_position.experience_level)
+    print('Technologies: ', new_position.technologies)
+    print('Contracts: ', new_position.finances.contracts)
+    print('b2b: ', new_position.finances.salary.b2b)
+    print('uop: ', new_position.finances.salary.uop)
+    print('Date: ', new_position.date)
+
+
+    return new_position
 
 def json_dict_to_model(json_dict):
     job_offer = JobOffer()
@@ -62,21 +144,6 @@ def handle_uploaded_file(json_file):
     json_dict_list = json.loads(json_data)
     for json_dict in json_dict_list:
         json_dict_to_model(json_dict)
-
-
-def admin(request):
-    context = {
-        "title": "Job Offers",
-        'app': 'job_offers',
-        'page': 'offers'
-    }
-    if request.method == 'POST':
-        print("ADDING FILE")
-        handle_uploaded_file(request.FILES['datafile'])
-        print("FINISHED")
-        return render(request, 'job_offers/content.html', context)
-
-    return render(request, 'job_offers/admin.html', context)
 
 
 def div_technologies(technologies):
