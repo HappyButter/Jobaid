@@ -23,8 +23,10 @@ const createFilterUrl = filters => {
     let url = window.location.href;
     console.log(url);
     url += url.indexOf('?') === -1 ? '?' : '';
-    if (url.indexOf('page') !== -1)
-        url = url.substr(0, url.indexOf('page'));
+    const page_index = url.indexOf('page');
+    const filters_index = url.indexOf('&');
+    if (page_index !== -1 && filters_index !== -1)
+        url = url.substr(0, (page_index > filters_index ? filters_index : page_index));
 
     console.log(url); 
     console.log(filters.technologies); 
