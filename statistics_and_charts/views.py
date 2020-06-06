@@ -1,7 +1,8 @@
 from django.shortcuts import render 
 from django.http import JsonResponse
 from  job_offers.models import JobPosition
-
+from .charts_data import languages, company_size, technologies, constracts, level
+from .models import ChartsData
 
 def statistics(request):
     context = {
@@ -11,32 +12,24 @@ def statistics(request):
     }
     return render(request, "statistics_and_charts/statistics.html", context)
 
+def recalculate_statistics(request):
+    new_data = ChartsData()
+    new_data.company_size = company_size()
+    new_data.experience_level = level()
+    new_data.contracts = constracts()
+    new_data.languages = languages()
+    new_data.technologies = technologies()
 
-def example(request): 
-    offers = JobPosition.objects()
-    stats = {
-        'JavaScript': 0,
-        'Python': 0,
-        'Java': 0,
-        'C#': 0,
-        'PHP': 0,
-        'C++': 0
+    # temporary for debugging
+    print('languages: ', new_data.languages)
+    print('company_size: ', new_data.company_size)
+    print('experience level:', new_data.experience_level)
+    print('contracts:', new_data.contracts)
+    print('technologies: ', new_data.technologies)
+
+    context = {
+        "title": "Statistics and charts",
+        'app': 'statistics_and_charts',
+        'page':'statistics'
     }
-    
-    for offer in offers:
-        lowercase_languages = [lang.lower() for lang in offer['languages']]
-        if 'javascript' in lowercase_languages:
-            stats['JavaScript'] += 1
-        if 'python' in lowercase_languages:
-            stats['Python'] += 1
-        if 'java' in lowercase_languages:
-            stats['Java'] += 1
-        if 'c#' in lowercase_languages:
-            stats['C#'] += 1
-        if 'php' in lowercase_languages:
-            stats['PHP'] += 1
-        if 'c++' in lowercase_languages:
-            stats['C++'] += 1     
-
-    return JsonResponse(stats)
-        
+    return render(request, "statistics_and_charts/statistics.html", context)
