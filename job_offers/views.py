@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from .forms import FilterForm, DataForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
+import re
 from mongoengine.queryset.visitor import Q
     
 
@@ -14,26 +15,16 @@ def joboffers(request):
     }
     offers = []
 
-    if request.method == 'POST':
-        form = FilterForm(request.POST)
-        context['form'] = {
-            'technologies': form['technologies'].value(),
-            'experience_level': form['experience_level'].value(),
-            'location': form['location'].value(),
-            'b2b': form['b2b'].value(),
-            'uop': form['uop'].value(),
-            'fork_min': form['fork_min'].value(),
-            'fork_max': form['fork_max'].value()
-        }
-        query = create_query(form)
-        offers = JobPosition.objects(query)
+    if len(request.GET):
+        offers = JobPosition.objects(create_query(request.GET))
     else:
         offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
-        # offers = JobPosition.objects.all()
-
+        
+    filters = extract_filters_from_url(request)
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    context['filters'] = filters
     context['page_obj'] = page_obj
     context['is_paginated'] = True
     context['offers_amount'] = len(offers)
@@ -91,54 +82,65 @@ def admin(request):
 
 def div_technologies(technologies):
     if technologies != None and technologies != '':
-        technologies_list = [tech.strip() for tech in technologies.split(',')]
+        technologies_list = [tech.strip() for tech in technologies.split(',') if tech.strip() != '']
         return technologies_list
     return None
 
 def create_query_with_excluded_empty_technologies():
     return Q(technologies__not__size=0) | Q(languages__not__size=0)
 
-def create_query(form):
+def create_query(query_dict):
     query = Q()
-    technologies = form['technologies'].value()
-    technologies_list = div_technologies(technologies)
+
+    technologies_list = div_technologies(query_dict.get('technologies'))
     if technologies_list != None:
         for technology in technologies_list:
             tech_query = Q()
             tech_query = Q(languages__iexact=technology) | tech_query
             tech_query = Q(technologies__iexact=technology) | tech_query
             query = tech_query & query
-
     query = query & create_query_with_excluded_empty_technologies()
 
-    experience_level = form['experience_level'].value()
-    if experience_level != ['']:
-        query = Q(experience_level__in=experience_level) & query
+    experience_level = query_dict.get('experience')
+    if experience_level != 'all' and experience_level != None:
+        query = Q(experience_level__iexact=experience_level) & query
 
-    b2b = form['b2b'].value()
+    b2b = query_dict.get('b2b')
     if b2b != None and b2b != False:
-        query = Q(finances__contracts__b2b=b2b) & query
+        query = Q(finances__contracts__b2b=True) & query
 
-    uop = form['uop'].value()
+
+    uop = query_dict.get('uop')
     if uop != None and uop != False:
-        query = Q(finances__contracts__uop=uop) & query
+        query = Q(finances__contracts__uop=True) & query
 
-    location = form['location'].value()
+    location = query_dict.get('location')
     if location != None and location != '':
         query = Q(location__address__iexact=location) & query
 
-    fork_min = form['fork_min'].value()
+    fork_min = query_dict.get('fork_min')
     try:
         fork_min = int(fork_min)
-        query = Q(finances__salary__b2b__min__gte=fork_min) & query
+        query = (Q(finances__salary__b2b__min__gte=fork_min) | Q(finances__salary__uop__min__gte=fork_min)) & query
     except:
         fork_min = None
         
-    fork_max = form['fork_max'].value()
+    fork_max = query_dict.get('fork_max')
     try:
         fork_max = int(fork_max)
-        query = Q(finances__salary__b2b__max__lte=fork_max) & query
+        query = (Q(finances__salary__b2b__max__lte=fork_max) | Q(finances__salary__uop__max__lte=fork_max)) & query
     except:
         fork_max = None
 
     return query
+
+
+def extract_filters_from_url(request):
+    query_string = request.GET.urlencode()
+    pattern = re.compile(r'page=\d')
+    result = pattern.search(query_string)
+    filters_start = result.end() if result is not None else 0
+    processed = query_string[filters_start:]
+    if processed == '': return ''
+    return processed if processed[0] == '&' else '&' + processed
+

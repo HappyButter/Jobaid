@@ -36,6 +36,7 @@ SECRET_KEY = 'bv2n9n9qrlyat4=)a&-oo*!6zj$50n=590boi+@3v5*i=a9faw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['https://jobaid.herokuapp.com/', 'http://127.0.0.1:8000/']
 ALLOWED_HOSTS = []
 
 
