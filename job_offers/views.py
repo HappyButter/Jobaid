@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from .forms import FilterForm, DataForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
+import re
 from mongoengine.queryset.visitor import Q
     
 
@@ -21,9 +22,11 @@ def joboffers(request):
     else:
         offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
         # offers = JobPosition.objects.all()
+    filters = extract_filters_from_url(request)
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    context['filters'] = filters
     context['page_obj'] = page_obj
     context['is_paginated'] = True
     context['offers_amount'] = len(offers)
@@ -132,3 +135,14 @@ def create_query(form):
         fork_max = None
 
     return query
+
+
+def extract_filters_from_url(request):
+    query_string = request.GET.urlencode()
+    pattern = re.compile(r'page=\d')
+    result = pattern.search(query_string)
+    filters_start = result.end() if result is not None else 0
+    processed = query_string[filters_start:]
+    if processed == '': return ''
+    return processed if processed[0] == '&' else '&' + processed
+
