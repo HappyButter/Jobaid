@@ -16,7 +16,7 @@ def salaryprediction(request):
     if request.method == 'POST':
         form = PredictionForm(request.POST)
         context.update(make_dict_from_form(form))
-        print('context: ', context) # temporery for debugging
+        print('context: ', context) # temporary for debugging
     else:
         form = PredictionForm()
         context['form'] = form

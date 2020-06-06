@@ -22,12 +22,12 @@ const gatherUserInput = () => {
 const createFilterUrl = filters => {
     let url = window.location.href;
     console.log(url);
-    url += url.indexOf('?') === -1 ? '?' : '';
     const page_index = url.indexOf('page');
     const filters_index = url.indexOf('&');
-    if (page_index !== -1 && filters_index !== -1)
+    if (page_index !== -1 || filters_index !== -1)
         url = url.substr(0, (page_index > filters_index ? filters_index : page_index));
-
+    url += url.indexOf('?') === -1 ? '?' : '';
+    
     console.log(url); 
     console.log(filters.technologies); 
     filters.technologies.length ? url += `&technologies=${filters.technologies.join(',')}` : null;
