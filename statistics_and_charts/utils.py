@@ -1,14 +1,14 @@
-from  job_offers.models import JobPosition
+from  job_offers.models import JobOffer
 from .models import ChartsData
 from datetime import date
 
 def recalculate_statistics():
     new_data = ChartsData()
-    new_data.company_size = company_size()
-    new_data.experience_level = level()
-    new_data.contracts = constracts()
+    # new_data.company_size = company_size()
+    # new_data.experience_level = level()
+    # new_data.contracts = constracts()
     new_data.languages = languages()
-    new_data.technologies = technologies()
+    # new_data.technologies = technologies()
     new_data.date = date.today()
 
     # temporary for debugging
@@ -22,7 +22,7 @@ def recalculate_statistics():
 
 
 def languages():
-    offers = JobPosition.objects() 
+    offers = JobOffer.objects()
     stats = {
         'JavaScript': 0,
         'Python': 0,
@@ -32,7 +32,7 @@ def languages():
         'C++': 0,
         'Others': 0
     }
-    
+    print(offers[0])
     for offer in offers:
         lowercase_languages = [lang.lower() for lang in offer['languages']]
         if 'javascript' in lowercase_languages:
@@ -61,7 +61,7 @@ def languages():
 
 
 def level():
-    offers = JobPosition.objects() 
+    offers = JobOffer.objects() 
     stats = {
         'junior' : 0,
         'mid' : 0,
@@ -81,7 +81,7 @@ def level():
 
 
 def technologies():
-    offers = JobPosition.objects() 
+    offers = JobOffer.objects() 
     stats = {
         'Docker' : 0,
         'AWS' : 0,
@@ -89,8 +89,8 @@ def technologies():
         'React' : 0,
         'Spring' : 0,
         'Kubernetes' : 0,
-        '.NET' : 0,
-        'Node.js' : 0,
+        'NET' : 0,
+        'Nodejs' : 0,
         'MySQL' : 0
     }
     
@@ -109,9 +109,9 @@ def technologies():
         if 'kubernetes' in technologies:
             stats['Kubernetes'] += 1
         if '.net' in technologies:
-            stats['.NET'] += 1
+            stats['NET'] += 1
         if 'node.js' in technologies or 'nodejs' == technologies or 'node' == technologies:
-            stats['Node.js'] += 1
+            stats['Nodejs'] += 1
         if 'mysql' in technologies:
             stats['MySQL'] += 1
 
@@ -119,7 +119,7 @@ def technologies():
     
 
 def constracts():
-    offers = JobPosition.objects() 
+    offers = JobOffer.objects() 
     stats = {
         'b2b' : 0,
         'uop' : 0
@@ -136,7 +136,7 @@ def constracts():
 
 
 def company_size():
-    offers = JobPosition.objects() 
+    offers = JobOffer.objects() 
     stats = {
         '<10' : 0,
         '10-50' : 0,

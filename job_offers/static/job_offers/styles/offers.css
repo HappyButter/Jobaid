@@ -1,5 +1,5 @@
 .form {
-    max-width: 960px;
+    width: 960px;
     display: flex;
     flex-direction: column;
 }
@@ -123,7 +123,7 @@
 /* offers section */
 
 .offer__item {
-    max-width: 960px;
+    width: 960px;
     background-color: rgb(240, 240, 240);
     border-radius: 5px;
     margin-bottom: 20px;

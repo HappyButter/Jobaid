@@ -42,8 +42,8 @@ class ChartsData(Document):
             'React' : 0,
             'Spring' : 0,
             'Kubernetes' : 0,
-            '.NET' : 0,
-            'Node.js' : 0,
+            'NET' : 0,
+            'Nodejs' : 0,
             'MySQL' : 0
         }
     )
