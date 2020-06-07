@@ -1,7 +1,8 @@
-from django.http import JsonResponse
 import pymongo
 import json
 import environ
+
+from django.http import JsonResponse
 
 TECH_PATH = "../scrapers/info/technologies.json"
 LANG_PATH = "../scrapers/info/languages.json"
