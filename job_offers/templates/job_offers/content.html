@@ -134,21 +134,21 @@
         <div class="offers__pagination">
             <div class="pagination__btns">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1" class="pagination__btn">First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination__btn">Previous</a>
+                    <a href="?page=1{{ filters }}" class="pagination__btn">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{{ filters }}" class="pagination__btn">Previous</a>
                 {% endif %}
 
                 {% for num in page_obj.paginator.page_range %}
                     {% if page_obj.number == num %}
-                        <a href="?page={{ num }}" class="pagination__btn pagination__btn-current">{{ num }}</a>
+                        <a href="?page={{ num }}{{ filters }}" class="pagination__btn pagination__btn-current">{{ num }}</a>
                     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a href="?page={{ num }}" class="pagination__btn">{{ num }}</a>
+                        <a href="?page={{ num }}{{ filters }}" class="pagination__btn">{{ num }}</a>
                     {% endif %}
                 {% endfor %}
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination__btn">Next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination__btn">Last</a>
+                    <a href="?page={{ page_obj.next_page_number }}{{ filters }}" class="pagination__btn">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{{ filters }}" class="pagination__btn">Last</a>
                 {% endif %}
             </div>
             <div class="pagination__count">
