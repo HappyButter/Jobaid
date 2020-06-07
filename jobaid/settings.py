@@ -43,6 +43,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jobaid.apps.JobaidConfig',
     'job_offers.apps.JobOffersConfig',
     'salary_prediction.apps.SalaryPredictionConfig',
     'statistics_and_charts.apps.StatisticsAndChartsConfig',

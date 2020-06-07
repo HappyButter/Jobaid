@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import PredictionForm
-from job_offers.views import div_technologies
+from common.utils import div_technologies
 
 
 def salaryprediction(request):

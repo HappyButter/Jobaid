@@ -1,45 +1,12 @@
-from mongoengine import fields, Document, EmbeddedDocument
-
-
-class Salary(EmbeddedDocument):
-    b2b = fields.DictField(default={'min': 0, 'max': 0})
-    uop = fields.DictField(default={'min': 0, 'max': 0})
-
-
-class Finances(EmbeddedDocument):
-    contracts = fields.DictField(default={'b2b': False, 'uop': False})
-    salary = fields.EmbeddedDocumentField(Salary)
-
-
-class Location(EmbeddedDocument):
-    address = fields.StringField()
-    coordinates = fields.GeoPointField()
-    
-
-class JobPosition(Document):
-    title = fields.StringField()
-    location = fields.EmbeddedDocumentField(Location)
-
-    company = fields.StringField(max_length=100)
-    company_size = fields.IntField(min_value = 0)
-
-    experience_level = fields.StringField(max_length=100)
-
-    languages = fields.ListField(fields.StringField())
-    technologies = fields.ListField(fields.StringField())
-
-    finances = fields.EmbeddedDocumentField(Finances)
-
-    offer_hash = fields.StringField(max_length=62)
-
-    meta = {'allow_inheritance': True}
-
-    def __str__(self):
-        return self.title
+from mongoengine import fields
+from common.models import JobPosition
 
 
 class JobOffer(JobPosition):
+    title = fields.StringField()
+    company = fields.StringField(max_length=100)
+    languages = fields.ListField(fields.StringField())
     offer_link = fields.URLField()
     source_page = fields.StringField(max_length=100)
-    date = fields.StringField(max_length=100)
     active = fields.BooleanField(default=True)
+    offer_hash = fields.StringField(max_length=62)
