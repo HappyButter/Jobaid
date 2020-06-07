@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from mongoengine.errors import DoesNotExist, MultipleObjectsReturned
 from .forms import FilterForm, DataForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
 from mongoengine.queryset.visitor import Q
-    
+
 
 def joboffers(request):
     context = {
@@ -30,6 +31,7 @@ def joboffers(request):
     else:
         offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
         # offers = JobPosition.objects.all()
+    offers = [offer for offer in offers if offer['active'] == True]
 
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
@@ -42,34 +44,47 @@ def joboffers(request):
 
 
 def json_dict_to_model(json_dict):
-    job_offer = JobOffer()
-    salary = Salary()
-    location = Location()
-    finances = Finances()
-    job_offer['title'] = json_dict['title']
-    location['address'] = json_dict['location']['address']
-    #location['coordinates'] = json_dict['location']['coordinates']    #for future
-    job_offer['location'] = location
-    job_offer['company'] = json_dict['company']
-    job_offer['company_size'] = json_dict['company_size']
-    job_offer['experience_level'] = json_dict['experience_level']
-    job_offer['languages'] = json_dict['languages']
-    job_offer['technologies'] = json_dict['technologies']
-    salary['b2b'] = json_dict['finances']['salary']['b2b']
-    salary['uop'] = json_dict['finances']['salary']['uop']
-    finances['salary'] = salary
-    finances['contracts'] = json_dict['finances']['contracts']
-    job_offer['finances'] = finances
-    job_offer['offer_hash'] = json_dict['offer_hash']
-    job_offer['offer_link'] = json_dict['offer_link']
-    job_offer['source_page'] = json_dict['source_page']
-    job_offer['date'] = json_dict['date']
-    job_offer['active'] = json_dict['active']
-    job_offer.save()
+    try:
+        same_offer = JobPosition.objects.get(offer_hash = json_dict['offer_hash'])
+        same_offer['active'] = json_dict['active']
+        same_offer.save()
+    except DoesNotExist:
+        job_offer = JobOffer()
+        salary = Salary()
+        location = Location()
+        finances = Finances()
+        job_offer['title'] = json_dict['title']
+        location['address'] = json_dict['location']['address']
+        #location['coordinates'] = json_dict['location']['coordinates']    #for future
+        job_offer['location'] = location
+        job_offer['company'] = json_dict['company']
+        job_offer['company_size'] = json_dict['company_size']
+        job_offer['experience_level'] = json_dict['experience_level']
+        job_offer['languages'] = json_dict['languages']
+        job_offer['technologies'] = json_dict['technologies']
+        salary['b2b'] = json_dict['finances']['salary']['b2b']
+        salary['uop'] = json_dict['finances']['salary']['uop']
+        finances['salary'] = salary
+        finances['contracts'] = json_dict['finances']['contracts']
+        job_offer['finances'] = finances
+        job_offer['offer_hash'] = json_dict['offer_hash']
+        job_offer['offer_link'] = json_dict['offer_link']
+        job_offer['source_page'] = json_dict['source_page']
+        job_offer['date'] = json_dict['date']
+        job_offer['active'] = json_dict['active']
+        job_offer.save()
+    except MultipleObjectsReturned:
+        print("Error: 2 offers with same hash in database - clear database")
 
 def handle_uploaded_file(json_file):
     json_data = json_file.read()
     json_dict_list = json.loads(json_data)
+    source = json_dict_list[0]['source_page']
+    print(f"From {source}")
+    offers_from_source = JobPosition.objects(source_page = source)
+    for offer in offers_from_source:
+        offer['active'] = False
+        offer.save()
     for json_dict in json_dict_list:
         json_dict_to_model(json_dict)
 
