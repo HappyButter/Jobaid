@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from mongoengine.errors import DoesNotExist, MultipleObjectsReturned
 from .forms import FilterForm, DataForm
 from .models import JobOffer, JobPosition, Salary, Finances, Location
 import json
 from mongoengine.queryset.visitor import Q
-
+from mongoengine.errors import DoesNotExist, MultipleObjectsReturned
 
 def joboffers(request):
     context = {
