@@ -1,38 +1,7 @@
 from datetime import datetime
-from mongoengine import fields, Document, EmbeddedDocument
+from mongoengine import fields, Document
 
-class ChartsData(Document):
-
-    company_size = fields.DictField(
-        default={
-            '<10' : 0,
-            '10-50' : 0,
-            '50-200' : 0,
-            '200-500': 0,
-            '500-1000': 0,
-            '>1000': 0
-        }
-    )
-
-    experience_level = fields.DictField(
-        default={
-            'junior' : 0,
-            'mid' : 0,
-            'senior' : 0
-        }
-    )
-
-    languages = fields.DictField(
-        default={
-            'JavaScript': 0,
-            'Python': 0,
-            'Java': 0,
-            'C#': 0,
-            'PHP': 0,
-            'C++': 0,
-            'Others': 0
-        }
-    )
+class BarChartsData(Document):
 
     technologies = fields.DictField(
         default={
@@ -47,6 +16,43 @@ class ChartsData(Document):
             'MySQL' : 0
         }
     )
+
+    company_size = fields.DictField(
+        default={
+            '<10' : 0,
+            '10-50' : 0,
+            '50-200' : 0,
+            '200-500': 0,
+            '500-1000': 0,
+            '>1000': 0
+        }
+    )
+
+    date = fields.DateTimeField(defualt=datetime.utcnow)
+
+class PieChartsData(Document):
+    
+    languages = fields.DictField(
+        default={
+            'JavaScript': 0,
+            'Python': 0,
+            'Java': 0,
+            'C#': 0,
+            'PHP': 0,
+            'C++': 0,
+            'Others': 0
+        }
+    )
+    
+
+    experience_level = fields.DictField(
+        default={
+            'junior' : 0,
+            'mid' : 0,
+            'senior' : 0
+        }
+    )
+
 
     contracts = fields.DictField(
         default={
