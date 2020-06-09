@@ -1,24 +1,17 @@
-.chart__languages {
-    width: 600px;
-    height: 300px;
+.charts{
+    width: 960px;
+    height: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(117, 117, 117);
+    border-radius: 20px;
+    margin-bottom: 20px;
 }
 
-.chart__level{
-    width: 600px;
-    height: 300px;
-}
-
-.chart__technologies {
-    width: 600px;
-    height: 300px;
-}
-
-.chart__constracts{
-    width: 600px;
-    height: 300px;
-}
-
-.chart__company_size{
-    width: 600px;
-    height: 300px;
+.charts__description{
+    text-align: justify;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #d1d1d1;
 }

@@ -14,14 +14,13 @@ const fetchData = async (url) => {
 
 const createPieCharts = async (url) => {
     const pieChartsData = await fetchData(url);
-    console.log(pieChartsData) 
 
     const pieChartDivs = [chartDivLanguages, chartDivLevel, chartDivConstracts]
     const piePlotNames = ['Languages', 'Experience Level', 'Contract Type']
 
     let i = 0;
     for(statistics in pieChartsData){
-        console.log(statistics)
+
         const values = Object.values(pieChartsData[statistics]);
         const labels = Object.keys(pieChartsData[statistics]);
     
@@ -40,10 +39,17 @@ const createPieCharts = async (url) => {
         const layout = {
             showlegend: false,
             plot_bgcolor:"black",
-            paper_bgcolor:"#FFF0"
+            paper_bgcolor:"#FFF0",
+            width: 500,
+            height: 500,
+            font: {
+                family: 'Poppins, sans-serif',
+                size: 18,
+                color: '#d1d1d1'
+            },
         }
     
-        Plotly.newPlot(pieChartDivs[i], data, layout);
+        Plotly.newPlot(pieChartDivs[i], data, layout, {staticPlot: true});
         i++;
     }
 }
@@ -51,10 +57,11 @@ const createPieCharts = async (url) => {
 
 const createBarCharts = async (url) => {
     const barChartsData = await fetchData(url);
-    console.log(barChartsData) 
+
     const barChartDivs = [chartDivTechnologies, chartDivCompanySize];
     const barPlotNames = ['Top10 Technologies', 'Company Size'];
-    
+    const barPlotXaxis = ['Technologies', 'Number of employees']
+
     let i = 0; 
     for(statistics in barChartsData){
         const values = Object.values(barChartsData[statistics]);
@@ -69,7 +76,7 @@ const createBarCharts = async (url) => {
                 y: normalized,
                 type: 'bar',
                 marker: {
-                    color: 'darkblue'
+                    color: '#5f2ce8'
                 }
             }
         ]
@@ -77,11 +84,28 @@ const createBarCharts = async (url) => {
         const layout = {
             title: barPlotNames[i],
             margin: { 
-                t: 30 
-            }
+                t: 50 
+            },
+            xaxis: {
+                title: barPlotXaxis[i],    
+                automargin: true,
+                titlefont: { size:30 },
+            },
+            yaxis: {
+                title: 'Percent',    
+                automargin: true,
+                titlefont: { size:30 },
+            },
+            font: {
+                family: 'Poppins, sans-serif',
+                size: 18,
+                color: '#d1d1d1'
+            },
+            paper_bgcolor:"#FFF0",
+            plot_bgcolor:"#FFF0",
         }
     
-        Plotly.newPlot(barChartDivs[i], data, layout);
+        Plotly.newPlot(barChartDivs[i], data, layout, {staticPlot: true});
         i++;
     }
 }
