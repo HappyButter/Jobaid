@@ -34,10 +34,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'bv2n9n9qrlyat4=)a&-oo*!6zj$50n=590boi+@3v5*i=a9faw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
+print(DEBUG)
 
-# ALLOWED_HOSTS = ['https://jobaid.herokuapp.com/', 'http://127.0.0.1:8000/']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://jobaid.herokuapp.com/', '127.0.0.1']
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -57,7 +58,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -148,6 +150,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")

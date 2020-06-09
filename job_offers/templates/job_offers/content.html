@@ -85,7 +85,7 @@
             <article class="offer__item">
                 <div class="item__row item__title">
                     <span class="offer__name"><i class="fas fa-user-tie awesome-icon"></i> {{ offer.title }}</span>
-                    <span class="offer__experience"><i class="fas fa-graduation-cap"></i> {{ offer.experience_level }}</span>
+                    <span class="offer__experience"><i class="fas fa-graduation-cap"></i> {% if offer.experience_level %}{{ offer.experience_level }}{% else %}?{% endif %}</span>
                     <span class="offer__location"><i class="fas fa-city"></i> {{ offer.location.address }}</span>
                 </div>
                 <div class="item__row item__details">
