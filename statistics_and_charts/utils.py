@@ -1,28 +1,28 @@
 from  job_offers.models import JobOffer
-from .models import ChartsData
+from .models import BarChartsData, PieChartsData
 from datetime import date
 
 def recalculate_statistics():
-    new_data = ChartsData()
-    # new_data.company_size = company_size()
-    # new_data.experience_level = level()
-    # new_data.contracts = constracts()
-    new_data.languages = languages()
-    # new_data.technologies = technologies()
-    new_data.date = date.today()
 
-    # temporary for debugging
-    # print('languages: ', new_data.languages)
-    # print('company_size: ', new_data.company_size)
-    # print('experience level:', new_data.experience_level)
-    # print('contracts:', new_data.contracts)
-    # print('technologies: ', new_data.technologies)
-
-    new_data.save()
-
-
-def languages():
     offers = JobOffer.objects()
+
+    pie_charts_data = PieChartsData()
+    pie_charts_data.languages = languages(offers)
+    pie_charts_data.experience_level = level(offers)
+    pie_charts_data.contracts = constracts(offers)
+    pie_charts_data.date = date.today()
+    
+    pie_charts_data.save()
+
+    bar_charts_data = BarChartsData()
+    bar_charts_data.company_size = company_size(offers)
+    bar_charts_data.technologies = technologies(offers)
+    bar_charts_data.date = date.today()
+
+    bar_charts_data.save()
+
+
+def languages(offers):
     stats = {
         'JavaScript': 0,
         'Python': 0,
@@ -32,7 +32,7 @@ def languages():
         'C++': 0,
         'Others': 0
     }
-    print(offers[0])
+    
     for offer in offers:
         lowercase_languages = [lang.lower() for lang in offer['languages']]
         if 'javascript' in lowercase_languages:
@@ -60,8 +60,7 @@ def languages():
     return stats
 
 
-def level():
-    offers = JobOffer.objects() 
+def level(offers):
     stats = {
         'junior' : 0,
         'mid' : 0,
@@ -80,8 +79,7 @@ def level():
     return stats
 
 
-def technologies():
-    offers = JobOffer.objects() 
+def technologies(offers):
     stats = {
         'Docker' : 0,
         'AWS' : 0,
@@ -104,7 +102,7 @@ def technologies():
             stats['Angular'] += 1
         if 'spring' in technologies:
             stats['Spring'] += 1
-        if 'react' in technologies:
+        if 'react' in technologies or 'reactjs' in technologies:
             stats['React'] += 1
         if 'kubernetes' in technologies:
             stats['Kubernetes'] += 1
@@ -118,8 +116,7 @@ def technologies():
     return stats
     
 
-def constracts():
-    offers = JobOffer.objects() 
+def constracts(offers):
     stats = {
         'b2b' : 0,
         'uop' : 0
@@ -135,8 +132,7 @@ def constracts():
     return stats
 
 
-def company_size():
-    offers = JobOffer.objects() 
+def company_size(offers):
     stats = {
         '<10' : 0,
         '10-50' : 0,
@@ -163,4 +159,3 @@ def company_size():
             if size > 1000:
                 stats['>1000'] += 1
     return stats
-    

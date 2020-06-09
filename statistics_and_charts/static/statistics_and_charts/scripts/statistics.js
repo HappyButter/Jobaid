@@ -1,174 +1,117 @@
 console.log("hello there from statistics script");
 
-// const chartDivLanguages = document.querySelector('.chart__languages');
-// const chartDivLevel = document.querySelector('.chart__level');
-// const chartDivTechnologies = document.querySelector('.chart__technologies');
-// const chartDivConstracts = document.querySelector('.chart__constracts');
-// const chartDivCompanySize = document.querySelector('.chart__company_size');
+const chartDivLanguages = document.querySelector('.chart__languages');
+const chartDivLevel = document.querySelector('.chart__level');
+const chartDivTechnologies = document.querySelector('.chart__technologies');
+const chartDivConstracts = document.querySelector('.chart__constracts');
+const chartDivCompanySize = document.querySelector('.chart__company_size');
 
 
-// const fetchData = async (url) => {
-//     const response = await fetch(url);
-//     return await response.json();
-// }
+const fetchData = async (url) => {
+    const response = await fetch(url);
+    return await response.json();
+}
 
-// const createPlotLanguages = async (url, chartDivLanguages) => {
-//     const statistics = await fetchData(url);
-//     console.log(statistics);
+const createPieCharts = async (url) => {
+    const pieChartsData = await fetchData(url);
 
-//     const values = Object.values(statistics);
-//     const labels = Object.keys(statistics);
+    const pieChartDivs = [chartDivLanguages, chartDivLevel, chartDivConstracts]
+    const piePlotNames = ['Languages', 'Experience Level', 'Contract Type']
 
-//     const total = values.reduce((sum, value) => sum + value, 0);
-//     const normalized = values.map(value => value/total * 100);
+    let i = 0;
+    for(statistics in pieChartsData){
 
-//     const data = [
-//         {
-//             values: normalized,
-//             labels: labels,
-//             hoverinfo: 'percent',
-//             hole: .9,
-//             title: 'Languages',
-//             textinfo: "label",
-//             textposition: "outside",
-//             type: 'pie'
-//         }
-//     ]
-
-//     const layout = {
-//         showlegend: false,
-//         plot_bgcolor:"black",
-//         paper_bgcolor:"#FFF0"
-//     }
-
-//     Plotly.newPlot(chartDivLanguages, data, layout);
-// }
-
-// const createPlotLevel = async (url, chartDivLevel) => {
-//     const statistics = await fetchData(url);
-//     console.log(statistics);
-
-//     const values = Object.values(statistics);
-//     const labels = Object.keys(statistics);
-
-//     const data = [
-//         {
-//             values: values,
-//             labels: labels,
-//             hole: .9,
-//             title: 'Level',
-//             hoverinfo: 'percent',
-//             textinfo: "label",
-//             textposition: "outside",
-//             type: 'pie'
-//         }
-//     ]
-
-//     const layout = {
-//         showlegend: false,
-//         plot_bgcolor:"black",
-//         paper_bgcolor:"#FFF0"
-//     }
-
-//     Plotly.newPlot(chartDivLevel, data, layout);
-// }
-
-
-// const createPLotTechnologies = async (url, chartDivTechnologies) => {
-//     const statistics = await fetchData(url);
-//     console.log(statistics);
+        const values = Object.values(pieChartsData[statistics]);
+        const labels = Object.keys(pieChartsData[statistics]);
     
-//     const values = Object.values(statistics);
-//     const labels = Object.keys(statistics);
+        const data = [
+            {
+                values: values,
+                labels: labels,
+                hole: .9,
+                title: piePlotNames[i],
+                textinfo: "label+percent",
+                textposition: "outside",
+                type: 'pie'
+            }
+        ]
     
-
-//     const data = [
-//         {
-//             x: labels,
-//             y: values,
-//             opacity: 0.8,
-//             type: 'bar',
-//             marker: {
-//                 color: 'darkblue'
-//             }
-//         }
-//     ]
-
-//     const layout = {
-//         title:'Top10 technologies',
-//         margin: { 
-//             t: 30 
-//         }
-//     }
-
-//     Plotly.newPlot(chartDivTechnologies, data, layout);
-// }
-
-
-// const createPlotConstracts = async (url, chartDivConstracts) => {
-//     const statistics = await fetchData(url);
-//     console.log(statistics);
-
-//     const values = Object.values(statistics);
-//     const labels = Object.keys(statistics);
-
-//     const data = [
-//         {
-//             values: values,
-//             labels: labels,
-//             hole: .9,
-//             title: 'Contract Type',
-//             textinfo: "label+percent",
-//             textposition: "outside",
-//             type: 'pie'
-//         }
-//     ]
-
-//     const layout = {
-//         showlegend: false,
-//         plot_bgcolor:"black",
-//         paper_bgcolor:"#FFF0"
-//     }
-
-//     Plotly.newPlot(chartDivConstracts, data, layout);
-// }
-
-
-
-// const createPlotCompanySize = async (url, chartDivCompanySize) => {
-//     const statistics = await fetchData(url);
-//     console.log(statistics);
-
-//     const values = Object.values(statistics);
-//     const labels = Object.keys(statistics);
+        const layout = {
+            showlegend: false,
+            plot_bgcolor:"black",
+            paper_bgcolor:"#FFF0",
+            width: 500,
+            height: 500,
+            font: {
+                family: 'Poppins, sans-serif',
+                size: 18,
+                color: '#d1d1d1'
+            },
+            margin: {
+                t: 20
+            },
+        }
     
-//     const total = values.reduce((sum, value) => sum + value, 0);
-//     const normalized = values.map(value => value/total * 100);
-
-//     const data = [
-//         {
-//             x: labels,
-//             y: normalized,
-//             type: 'bar',
-//             marker: {
-//                 color: 'darkblue'
-//             }
-//         }
-//     ]
-
-//     const layout = {
-//         title: 'Company Size',
-//         margin: { 
-//             t: 30 
-//         }
-//     }
-
-//     Plotly.newPlot(chartDivCompanySize, data, layout);
-// }
+        Plotly.newPlot(pieChartDivs[i], data, layout, {staticPlot: true});
+        i++;
+    }
+}
 
 
-// createPlotLanguages('http://127.0.0.1:8000/statistics/languages/', chartDivLanguages);
-// createPlotLevel('http://127.0.0.1:8000/statistics/level/', chartDivLevel);
-// createPLotTechnologies('http://127.0.0.1:8000/statistics/technologies/', chartDivTechnologies);
-// createPlotConstracts('http://127.0.0.1:8000/statistics/constracts/', chartDivConstracts);
-// createPlotCompanySize('http://127.0.0.1:8000/statistics/company_size/', chartDivCompanySize);
+const createBarCharts = async (url) => {
+    const barChartsData = await fetchData(url);
+
+    const barChartDivs = [chartDivTechnologies, chartDivCompanySize];
+    const barPlotNames = ['Top10 Technologies', 'Company Size'];
+    const barPlotXaxis = ['Technologies', 'Number of employees']
+
+    let i = 0; 
+    for(statistics in barChartsData){
+        const values = Object.values(barChartsData[statistics]);
+        const labels = Object.keys(barChartsData[statistics]);
+
+        const total = values.reduce((sum, value) => sum + value, 0);
+        const normalized = values.map(value => value/total * 100);
+    
+        const data = [
+            {
+                x: labels,
+                y: normalized,
+                type: 'bar',
+                marker: {
+                    color: '#393ceb'
+                }
+            }
+        ]
+    
+        const layout = {
+            title: barPlotNames[i],
+            margin: { 
+                t: 50 
+            },
+            xaxis: {
+                title: barPlotXaxis[i],    
+                automargin: true,
+                titlefont: { size:30 },
+            },
+            yaxis: {
+                title: 'Percent',    
+                automargin: true,
+                titlefont: { size:30 },
+            },
+            font: {
+                family: 'Poppins, sans-serif',
+                size: 18,
+                color: '#d1d1d1'
+            },
+            paper_bgcolor:"#FFF0",
+            plot_bgcolor:"#FFF0",
+        }
+    
+        Plotly.newPlot(barChartDivs[i], data, layout, {staticPlot: true});
+        i++;
+    }
+}
+
+createPieCharts("http://127.0.0.1:8000/statistics/data/pie");
+createBarCharts("http://127.0.0.1:8000/statistics/data/bar");
