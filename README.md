@@ -1,4 +1,11 @@
 # Job*aid*
+
+![](jobaid.gif)
+
+## Application demo is available on heroku: 
+
+[link to our demo](https://jobaid.herokuapp.com/)
+
 ## Participants 
  - Adrian Furman - Team Leader
  - Konrad Walas
@@ -20,18 +27,13 @@ Jobaid is web application that helps people to find a job in IT [1] matching spe
 - visitor will be able to fill form about their work conditions (salary, company size, location, skills etc) and send it to our data base in order to enlarge our dataset
 ### statistics and Chart
 - User will be given lots of statistics parameters and plots representing current situation in each city, demand for programming language and so on
-### company ranking (optional => depends on possibility to scrap benefits and info about friendly conditions to develop)
-- User will see ranking of companies based on working conditions 
-### emails with week reports (optional => if there will be enough time)
-- User can fill form covering his interest in job offers and will receive weekly reports with job offers matched to him/her
 
 [1] - IT is good start thanks to amount of job offers available on the internet, if it succeed we can widen our app to other job sectors.
-
 
 ## Tech stack:
 - backend => Python, Django
 - frontend => Django templates
-- database => MongoDB or Postgres
+- database => MongoDB
 
 ## Project roadmap
 
