@@ -37,7 +37,7 @@ SECRET_KEY = 'bv2n9n9qrlyat4=)a&-oo*!6zj$50n=590boi+@3v5*i=a9faw'
 DEBUG = env('DEBUG')
 print(DEBUG)
 
-ALLOWED_HOSTS = ['https://jobaid.herokuapp.com/', '127.0.0.1']
+ALLOWED_HOSTS = ['jobaid.herokuapp.com', '127.0.0.1']
 # ALLOWED_HOSTS = []
 
 
