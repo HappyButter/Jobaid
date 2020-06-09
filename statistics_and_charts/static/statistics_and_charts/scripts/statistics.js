@@ -47,6 +47,9 @@ const createPieCharts = async (url) => {
                 size: 18,
                 color: '#d1d1d1'
             },
+            margin: {
+                t: 20
+            },
         }
     
         Plotly.newPlot(pieChartDivs[i], data, layout, {staticPlot: true});
