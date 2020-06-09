@@ -4,7 +4,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(117, 117, 117);
+    /* background-color: rgb(75, 75, 75); */
+    background-color:  rgb(92, 92, 92);
     border-radius: 20px;
     margin-bottom: 20px;
     flex-direction: column-reverse;
@@ -15,5 +16,5 @@
     font-size: 1.1em;
     margin-bottom: 20px;
     padding: 20px;
-    color: #d1d1d1;
+    color: #dadada;
 }

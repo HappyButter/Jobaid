@@ -79,7 +79,7 @@ const createBarCharts = async (url) => {
                 y: normalized,
                 type: 'bar',
                 marker: {
-                    color: '#5f2ce8'
+                    color: '#393ceb'
                 }
             }
         ]
