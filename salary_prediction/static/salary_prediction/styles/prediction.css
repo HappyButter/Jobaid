@@ -161,3 +161,36 @@ h3 {
     display: block;
     width: 400px;
 }
+
+
+/* PREDICTION RESULTS BOX */
+
+.prediction__results {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 3px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.prediction__title {
+    padding: 10px;
+    font-size: 1.2em;
+    color: rgb(75, 75, 75);
+}
+
+.prediction__salary {
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgb(75, 75, 75);
+    background-color: rgb(155, 202, 116);
+    padding: 10px 20px;
+    border-radius: 3px;
+    font-style: italic;
+}
+
+

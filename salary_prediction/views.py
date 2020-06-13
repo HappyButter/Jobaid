@@ -1,7 +1,11 @@
 from django.shortcuts import render
-from .forms import PredictionForm
-from common.utils import div_technologies
+from sklearn.ensemble import RandomForestRegressor
 
+from .forms import PredictionForm
+from .cleansing import prepare_and_encode_record, initialize_learning
+from .utils import make_dict_from_form
+
+model, features = initialize_learning()
 
 def salaryprediction(request):
 
@@ -15,17 +19,20 @@ def salaryprediction(request):
 
     if request.method == 'POST':
         form = PredictionForm(request.POST)
-        context.update(make_dict_from_form(form))
-        print('context: ', context) # temporary for debugging
+        ml_data_dict = make_dict_from_form(form)
+
+        print('ml data dict: ', ml_data_dict) # temporary for debugging
+
+        encoded_data = prepare_and_encode_record(ml_data_dict, features)
+        print('ml data dict Ffsfsdfs:\n', encoded_data)
+        predicted_salary = int(model.predict(encoded_data))
+        thousands = predicted_salary // 1000
+        rest = predicted_salary % 1000
+        context['display_results'] = True
+        context['predicted_salary'] = f'~ {thousands} {rest}  PLN'
+
     else:
         form = PredictionForm()
         context['form'] = form
 
     return render(request, "salary_prediction/salary_prediction.html", context)
-
-def make_dict_from_form(form):
-        prediction_input_data = {}
-        prediction_input_data['technologies'] = div_technologies(form['technologies'].value())
-        prediction_input_data['experience_level'] = form['experience_level'].value()
-        prediction_input_data['location'] = form['location'].value()
-        return prediction_input_data

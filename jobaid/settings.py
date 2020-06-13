@@ -14,7 +14,6 @@ import os
 import environ
 import mongoengine
 
-
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, True)
@@ -157,3 +156,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
