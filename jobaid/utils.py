@@ -8,6 +8,8 @@ def make_object_from_form(form):
     finances = Finances()
     salary = Salary()
 
+    _validate_input(form)
+
     location.address= form['location'].value()
     new_position.company_size = form['company_size'].value()
 
@@ -24,7 +26,7 @@ def make_object_from_form(form):
         finances.contracts.b2b = True
         salary.b2b['min'] = form['fork_min'].value()
         salary.b2b['max'] = form['fork_max'].value()
-    else:
+    elif 'uop' == form['contract'].value():
         finances.contracts.uop = True
         salary.uop['min'] = form['fork_min'].value()
         salary.uop['max'] = form['fork_max'].value()
@@ -35,7 +37,7 @@ def make_object_from_form(form):
     finances.salary = salary
     new_position.finances = finances
 
-    # # for debugging
+    # for debugging
     # print('Succesfuly created new position')
     # print('Adres: ', new_position.location.address)
     # print('Company size: ', new_position.company_size)
@@ -47,3 +49,38 @@ def make_object_from_form(form):
     # print('Date: ', new_position.date)
 
     return new_position
+
+class EmptyInput(Exception):
+    def __str__(self):
+        return 'There are empty fields'
+
+class NotEnoughData(Exception):
+    def __str__(self):
+        return 'The entered data are insufficient'
+
+def _validate_input(form):
+
+    technologies_list = div_technologies(form['technologies'].value())
+
+    if form['location'].value() == '':
+        raise EmptyInput
+
+    if form['company_size'].value() == None:
+        raise EmptyInput
+
+    if not technologies_list:
+        raise EmptyInput
+
+    if form['contract'].value() == None:
+        raise EmptyInput
+
+    if form['fork_min'].value() == None or form['fork_min'].value() == '' or form['fork_min'].value() == 0:
+        raise EmptyInput
+
+    if form['fork_max'].value() == None or form['fork_max'].value() == '' or form['fork_max'].value() == 0:
+        raise EmptyInput
+
+    if len(technologies_list) < 4:
+        raise NotEnoughData
+    
+    return True

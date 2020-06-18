@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 
-from common.models import JobPosition
+from .models import JobOffer
 from .utils import extract_filters_from_url, create_query, create_query_with_excluded_empty_technologies
 
 def joboffers(request):
@@ -13,9 +13,9 @@ def joboffers(request):
     offers = []
 
     if len(request.GET):
-        offers = JobPosition.objects(create_query(request.GET))
+        offers = JobOffer.objects(create_query(request.GET))
     else:
-        offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
+        offers = JobOffer.objects(create_query_with_excluded_empty_technologies())
         
     filters = extract_filters_from_url(request)
     paginator = Paginator(offers, 10)
