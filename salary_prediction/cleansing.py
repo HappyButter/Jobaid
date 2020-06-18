@@ -6,16 +6,16 @@ import copy
 import csv
 
 
-from sklearn import preprocessing
+# from sklearn import preprocessing
 from sklearn.tree import DecisionTreeRegressor, plot_tree
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.feature_extraction import DictVectorizer
+# from sklearn.feature_extraction import DictVectorizer
 from sklearn.tree import export_graphviz
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
+# from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import plot_confusion_matrix
+# from sklearn.metrics import confusion_matrix
+# from sklearn.metrics import plot_confusion_matrix
 from sklearn.model_selection import cross_val_score
 
 cities = [
@@ -32,58 +32,13 @@ cities = [
     ['remote', 'zdalnie', 'remotely']
 ]
 
-languages = [
-    'python', 
-    'java', 
-    'javascript', 
-    'sql', 
-    'html', 
-    'c#', 
-    'typescript', 
-    'c++', 
-    'php', 
-    'go', 
-    'r', 
-    'c', 
-    'nosql', 
-    'scala', 
-    'rust', 
-    'ruby', 
-    'kotlin'
-]
+languages = ['python', 'java', 'javascript', 'sql', 'html', 'c#', 'typescript', 'c++', 'php', 'go', 'r', 'c', 'nosql', 'scala',     'rust', 'ruby', 'kotlin']
 
-technologies = [
-    'docker', 
-    'agile', 
-    'linux', 
-    'aws', 
-    'rest', 
-    'angular', 
-    'react',
-    'jira', 
-    'azure', 
-    '.net', 
-    'postgresql', 
-    'hibernate', 
-    'node', 
-    'mongo', 
-    'maven', 
-    'postgre', 
-    'django', 
-    'laravel', 
-    'express', 
-    'vue', 
-    'django', 
-    'flask', 
-    'spring', 
-    'redux', 
-    'mysql', 
-    'kubernetes'
-    ]
+technologies = ['docker', 'agile', 'linux', 'aws', 'rest', 'angular', 'react','jira', 'azure', '.net', 'postgresql', 'hibernate', 'node', 'mongo', 'maven', 'postgre', 'django', 'laravel', 'express', 'vue', 'django', 'flask', 'spring', 'redux', 'mysql', 'kubernetes']
 
 
 def load_training_dataset():
-    with open('./salary_prediction/ml_output_uop_CSizeAverage.json', 'r') as f1, open('./salary_prediction/ml_output_b2b_CSizeAverage.json', 'r') as f2:
+    with open('./salary_prediction/ml_uop.json', 'r') as f1, open('./salary_prediction/ml_b2b.json', 'r') as f2:
         data = json.load(f1)
         for offer in data:
             offer['uop'] = 1
@@ -97,7 +52,7 @@ def load_training_dataset():
 
 
 def extract_experience(user_data):
-    for experience in ['mid', 'senior', 'junior']:
+    for experience in ['mid', 'senior', 'junior', 'juniormid', 'midsenior']:
         if user_data['experience'][0] == experience:
             user_data[experience] = 1
         else:
@@ -114,22 +69,30 @@ def extract_city(user_data):
                 user_data[city_options[0]] = 0
 
 
-def extract_languages(user_data):
-    for language in languages:
-        for skill in user_data['technologies']:
-            if language == skill.lower():
-                user_data[language] = 1
-            else:
-                user_data[language] = 0
+# def extract_languages(user_data):
+#     for language in languages:
+#         for skill in user_data['technologies']:
+#             if language == skill.lower():
+#                 user_data[language] = 1
+#                 print("JEST KURWWAA JEZYK")
+#             else:
+#                 user_data[language] = 0
 
 
-def extract_technologies(user_data):
+# def extract_technologies(user_data):
+#     for technology in technologies:
+#         user_data[technology] = 0
+
+#     for tech in user_data['technologies']:
+#         user_data[tech] = 1 if tech in technologies else 0
+
+
+def encode_skills(user_data):
     for technology in technologies:
-        for tech in user_data['technologies']:
-            if technology == tech.lower():
-                user_data[technology] = 1
-            else:
-                user_data[technology] = 0
+        user_data[technology] = 1 if technology in user_data['technologies'] else 0
+
+    for language in languages:
+        user_data[language] = 1 if language in user_data['technologies'] else 0
 
 
 def preprocess_loaded_data(data):
@@ -170,35 +133,29 @@ def preprocess_loaded_data(data):
 def create_dataframe_and_encode(data):
     columns = languages.copy()
     columns.extend(technologies)
-    print(len(columns))
+
     df = pd.DataFrame(data)
     df = pd.get_dummies(df, columns=columns.extend(['experience', 'city']), prefix='', prefix_sep='')
-    # print(df.shape)
-    # print(df.columns)
+
     df.to_csv('cleaned.csv')
     return df
 
 
-def prepare_and_encode_record(user_input):
-    print('preparing...')
+def prepare_and_encode_record(user_input, features):
     record = copy.deepcopy(user_input)
     extract_city(record)
-    extract_languages(record)
-    extract_technologies(record)
     extract_experience(record)
-    # company_size = user_input['company_size']
+
     record['uop'] = int(record['uop'])
     record['b2b'] = int(record['b2b'])
     record['size'] = 1007
-    record['notgiven'] = 0
+    record['unspecified'] = 0
+    encode_skills(record)
     del record['technologies']
     del record['city']
     del record['experience']
-    print('final record: ', record)
-    df = pd.DataFrame(data=record, index = [0])
-    # print(df)
-    # print(df.shape)
-    # print(df.columns)
+    df = pd.DataFrame(data=record, columns=features, index=[0]).drop('salary', axis=1).copy()
+
     return df
 
 
@@ -215,14 +172,14 @@ def train_model():
     dataframe = create_dataframe_and_encode(preprocessed)
     X_train, X_test, y_train, y_test = split_training_data(dataframe, 'salary')
 
-    best_alpha = 0.4378
+    best_alpha = 0.4377
     dt_regr = RandomForestRegressor(n_estimators=300, ccp_alpha=best_alpha, max_depth=19, min_samples_split=4, min_samples_leaf=2)
     dt_regr.fit(X_train, y_train)
     score = dt_regr.score(X_test, y_test)
     print(f'score: {score}')
     predicted = dt_regr.predict(X_test)
     print(calculate_accuracy(y_test, predicted, 10, 1000))
-    generate_accuracy_plot(y_test, predicted, 10, 1000)
+    # generate_accuracy_plot(y_test, predicted, 10, 1000)
     return dt_regr, dataframe.columns
 
 
@@ -294,9 +251,10 @@ def calculate_accuracy(target, pred, error_percent, error_fixed):
     for real, pred in zip(target, pred):
         if real*(1 - error_percent/100) - error_fixed <= pred <= real*(1 + error_percent/100) + error_fixed:
             accurate_count += 1
-    print(accurate_count)
-    print(len(target))
+    print('accurate shots: ', accurate_count)
+    print('total test count: ', len(target))
     return accurate_count/len(target)
+
 
 def generate_accuracy_plot(target, pred, error_percent, error_fixed):
     target, pred = zip(*sorted(zip(target, pred)))
@@ -330,14 +288,4 @@ def export_tree_to_file(tree_model, filename, format):
 
 def initialize_learning():
     print('initialize learining')
-    model = train_model()
-    return model
-
-# def get_trained_model():
-#     # if model == None:
-#     #     raise ValueError('model has not been trained yet')
-#     # else:
-#     print(model)
-#     return model
-
-
+    return train_model()

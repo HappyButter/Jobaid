@@ -37,53 +37,9 @@ cities = [
     ['remote', 'zdalnie', 'remotely']
 ]
 
-languages = [
-    'python', 
-    'java', 
-    'javascript', 
-    'sql', 
-    'html', 
-    'c#', 
-    'typescript', 
-    'c++', 
-    'php', 
-    'go', 
-    'r', 
-    'c', 
-    'nosql', 
-    'scala', 
-    'rust', 
-    'ruby', 
-    'kotlin'
-]
+languages = ['python', 'java', 'javascript', 'sql', 'html', 'c#', 'typescript', 'c++', 'php', 'go', 'r', 'c', 'nosql', 'scala',     'rust', 'ruby', 'kotlin']
 
-technologies = [
-    'docker', 
-    'agile', 
-    'linux', 
-    'aws', 
-    'rest', 
-    'angular', 
-    'jira', 
-    'azure', 
-    '.net', 
-    'postgresql', 
-    'hibernate', 
-    'node', 
-    'mongo', 
-    'maven', 
-    'postgre', 
-    'django', 
-    'laravel', 
-    'express', 
-    'vue', 
-    'django', 
-    'flask', 
-    'spring', 
-    'redux', 
-    'mysql', 
-    'kubernetes'
-    ]
+technologies = ['docker', 'agile', 'linux', 'aws', 'rest', 'angular', 'react','jira', 'azure', '.net', 'postgresql', 'hibernate', 'node', 'mongo', 'maven', 'postgre', 'django', 'laravel', 'express', 'vue', 'django', 'flask', 'spring', 'redux', 'mysql', 'kubernetes']
 
 cleaned = []
 

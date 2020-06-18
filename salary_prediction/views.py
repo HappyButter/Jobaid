@@ -21,13 +21,12 @@ def salaryprediction(request):
         form = PredictionForm(request.POST)
         ml_data_dict = make_dict_from_form(form)
 
-        print('ml data dict: ', ml_data_dict) # temporary for debugging
-
         encoded_data = prepare_and_encode_record(ml_data_dict, features)
-        print('ml data dict Ffsfsdfs:\n', encoded_data)
+
         predicted_salary = int(model.predict(encoded_data))
-        thousands = predicted_salary // 1000
-        rest = predicted_salary % 1000
+        thousands = str(predicted_salary // 1000)
+        rest = str(predicted_salary % 1000)
+        rest = '0' + rest if len(rest) < 3 else rest
         context['display_results'] = True
         context['predicted_salary'] = f'~ {thousands} {rest}  PLN'
 
