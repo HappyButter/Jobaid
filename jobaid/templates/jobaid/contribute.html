@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% if not is_input_valid %}
+<section class="content__section">
+    <div class="error__message">
+        {{ invalid_input_message }}
+    </div>
+</section>
+{% endif %}
 <section class="content__section data">
     <article class="data__left">
         <div>

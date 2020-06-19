@@ -14,7 +14,6 @@ import os
 import environ
 import mongoengine
 
-
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, True)
@@ -38,7 +37,6 @@ DEBUG = env('DEBUG')
 print(DEBUG)
 
 ALLOWED_HOSTS = ['jobaid.herokuapp.com', '127.0.0.1']
-# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -157,3 +155,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
