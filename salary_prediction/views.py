@@ -2,7 +2,7 @@ from django.shortcuts import render
 from sklearn.ensemble import RandomForestRegressor
 
 from .forms import PredictionForm
-from .cleansing import prepare_and_encode_record, initialize_learning
+from .prediction import prepare_and_encode_record, initialize_learning
 from .utils import make_dict_from_form
 
 model, features = initialize_learning()

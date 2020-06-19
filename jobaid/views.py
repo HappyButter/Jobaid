@@ -16,7 +16,8 @@ def contribute(request):
     context = {
         "title": "Job Offers",
         'app': 'jobaid',
-        'page': 'contribute'
+        'page': 'contribute',
+        'is_input_valid': True
     }
     offers = []
 
@@ -37,4 +38,5 @@ def contribute(request):
         form = AddPositionForm()
         context['form'] = form
 
+    print('show dialog: ', context['is_input_valid'])
     return render(request, 'jobaid/contribute.html', context)

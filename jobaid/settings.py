@@ -37,7 +37,6 @@ DEBUG = env('DEBUG')
 print(DEBUG)
 
 ALLOWED_HOSTS = ['jobaid.herokuapp.com', '127.0.0.1']
-# ALLOWED_HOSTS = []
 
 
 # Application definition

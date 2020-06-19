@@ -64,23 +64,30 @@ def _validate_input(form):
 
     if form['location'].value() == '':
         raise EmptyInput
+        print(1)
 
-    if form['company_size'].value() == None:
-        raise EmptyInput
+    # if form['company_size'].value() == None:
+    #     raise EmptyInput
+    #     print(2)
 
     if not technologies_list:
         raise EmptyInput
+        print(3)
 
     if form['contract'].value() == None:
         raise EmptyInput
+        print(4)
 
     if form['fork_min'].value() == None or form['fork_min'].value() == '' or form['fork_min'].value() == 0:
         raise EmptyInput
+        print(5)
 
     if form['fork_max'].value() == None or form['fork_max'].value() == '' or form['fork_max'].value() == 0:
         raise EmptyInput
+        print(6)
 
     if len(technologies_list) < 4:
         raise NotEnoughData
+        print(7)
     
     return True

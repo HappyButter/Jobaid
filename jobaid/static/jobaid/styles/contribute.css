@@ -161,3 +161,15 @@ h3 {
     display: block;
     width: 400px;
 }
+
+.error__message {
+    padding: 30px;
+    margin: 20px auto;
+    font-size: 1.1em;
+    color: white;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    background-color: rgb(195, 55, 55);
+    border-radius: 7px;
+}
