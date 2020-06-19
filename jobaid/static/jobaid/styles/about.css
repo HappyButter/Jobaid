@@ -1,6 +1,32 @@
 .about__title {
     color: brown;
-    font-size: 1.2em;
+    font-size: 1.9em;
     padding: 20px;
     margin-top: 40px;
+}
+
+.about__headers{
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 1.5em;
+    font-weight: 600px;
+    letter-spacing: 2px;
+    width: 800px;
+}
+
+.about__text{
+    padding : 20px;
+    font-size: 1.1em;
+    width: 800px;
+    text-align: justify;
+}
+
+.about__importatnt__note{
+    color: rgb(216, 20, 20);
+    padding : 20px;
+    font-size: 1.2em;
+    font-weight: 1000px;
+    width: 800px;
+    text-align: justify;
 }
