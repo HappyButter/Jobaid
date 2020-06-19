@@ -40,5 +40,11 @@
             <button type="submit" class="form__submit">predict</button>
         </div>
     </form>
+    {% if display_results %}
+    <div class="prediction__results">
+        <h3 class="prediction__title">Estimated salary:</h3>
+        <span class="prediction__salary">{{ predicted_salary }}</span>
+    </div>
+    {% endif %}
 </section>
 {% endblock content %}

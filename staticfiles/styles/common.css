@@ -1,0 +1,27 @@
+.content__section {
+    max-width: 960px;
+    margin: 20px 0;
+}
+
+.content__subtitle {
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    font-weight: 400;
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+.content__subtitle::after {
+    content: "";
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    height: 1px;
+    background-color: rgb(56, 56, 56);
+}
+
+.content__paragraph {
+    text-align: justify;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
