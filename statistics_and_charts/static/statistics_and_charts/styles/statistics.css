@@ -4,8 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: rgb(75, 75, 75); */
-    background-color:  rgb(92, 92, 92);
+    background-color: rgb(92, 92, 92);
     border-radius: 20px;
     margin-bottom: 20px;
     flex-direction: column-reverse;
