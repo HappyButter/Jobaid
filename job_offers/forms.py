@@ -1,10 +1,5 @@
 from django import forms
-
-EXPERIENCE_CHOICES =(
-    ("Junior", "Junior"),
-    ("Mid", "Mid"),
-    ("Senior", "Senior"),
-)
+from common.utils import EXPERIENCE_CHOICES
 
 class FilterForm(forms.Form):
     technologies = forms.CharField(max_length=100)

@@ -8,7 +8,7 @@
     <form action="/admin/" method="POST" enctype="multipart/form-data" class="admin__form">
         {% csrf_token %}
         <img src="{% static 'images/fingerprint.png' %}" alt="" class="admin__image">
-        <h2 class="admin__subtitle">So you pretend to be an admin?</h2>
+        <h2 class="admin__subtitle">So you claim to be an admin?</h2>
         <h2 class="admin__subtitle">PROVE IT!</h2>
         <span class="admin__phrase">and feed us with data...(JSON!)</span>
         <input type="file" name="datafile" class="admin__file form__input ">

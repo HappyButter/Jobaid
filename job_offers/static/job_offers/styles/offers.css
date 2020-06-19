@@ -1,5 +1,5 @@
 .form {
-    max-width: 960px;
+    width: 960px;
     display: flex;
     flex-direction: column;
 }
@@ -31,11 +31,12 @@
     border: none;
     box-shadow: none;
     box-sizing: border-box;
+    background-color: white !important;
 }
 
-.form__input:hover, .form__input:read-write {
+/* .form__input:hover, .form__input:read-write {
     background-color: rgb(255, 255, 255);
-}
+} */
 
 
 .form__label {
@@ -123,7 +124,7 @@
 /* offers section */
 
 .offer__item {
-    max-width: 960px;
+    width: 960px;
     background-color: rgb(240, 240, 240);
     border-radius: 5px;
     margin-bottom: 20px;
@@ -349,14 +350,6 @@
     font-weight: 500;
     background-color: rgb(75, 75, 75);
 }
-
-
-
-
-
-
-
-
 
 .awesome-icon {
     margin-right: 10px;

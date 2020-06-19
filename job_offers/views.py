@@ -14,19 +14,8 @@ def joboffers(request):
     }
     offers = []
 
-    if request.method == 'POST':
-        form = FilterForm(request.POST)
-        context['form'] = {
-            'technologies': form['technologies'].value(),
-            'experience_level': form['experience_level'].value(),
-            'location': form['location'].value(),
-            'b2b': form['b2b'].value(),
-            'uop': form['uop'].value(),
-            'fork_min': form['fork_min'].value(),
-            'fork_max': form['fork_max'].value()
-        }
-        query = create_query(form)
-        offers = JobPosition.objects(query)
+    if len(request.GET):
+        offers = JobPosition.objects(create_query(request.GET))
     else:
         offers = JobPosition.objects(create_query_with_excluded_empty_technologies())
         # offers = JobPosition.objects.all()
@@ -35,6 +24,7 @@ def joboffers(request):
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    context['filters'] = filters
     context['page_obj'] = page_obj
     context['is_paginated'] = True
     context['offers_amount'] = len(offers)
@@ -106,58 +96,3 @@ def admin(request):
         return render(request, 'job_offers/content.html', context)
 
     return render(request, 'job_offers/admin.html', context)
-
-
-def div_technologies(technologies):
-    if technologies != None and technologies != '':
-        technologies_list = [tech.strip() for tech in technologies.split(',')]
-        return technologies_list
-    return None
-
-def create_query_with_excluded_empty_technologies():
-    return Q(technologies__not__size=0) | Q(languages__not__size=0)
-
-def create_query(form):
-    query = Q()
-    technologies = form['technologies'].value()
-    technologies_list = div_technologies(technologies)
-    if technologies_list != None:
-        for technology in technologies_list:
-            tech_query = Q()
-            tech_query = Q(languages__iexact=technology) | tech_query
-            tech_query = Q(technologies__iexact=technology) | tech_query
-            query = tech_query & query
-
-    query = query & create_query_with_excluded_empty_technologies()
-
-    experience_level = form['experience_level'].value()
-    if experience_level != ['']:
-        query = Q(experience_level__in=experience_level) & query
-
-    b2b = form['b2b'].value()
-    if b2b != None and b2b != False:
-        query = Q(finances__contracts__b2b=b2b) & query
-
-    uop = form['uop'].value()
-    if uop != None and uop != False:
-        query = Q(finances__contracts__uop=uop) & query
-
-    location = form['location'].value()
-    if location != None and location != '':
-        query = Q(location__address__iexact=location) & query
-
-    fork_min = form['fork_min'].value()
-    try:
-        fork_min = int(fork_min)
-        query = Q(finances__salary__b2b__min__gte=fork_min) & query
-    except:
-        fork_min = None
-        
-    fork_max = form['fork_max'].value()
-    try:
-        fork_max = int(fork_max)
-        query = Q(finances__salary__b2b__max__lte=fork_max) & query
-    except:
-        fork_max = None
-
-    return query

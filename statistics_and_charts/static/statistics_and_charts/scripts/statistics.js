@@ -1,49 +1,117 @@
 console.log("hello there from statistics script");
 
-const chartDiv = document.querySelector('.chart__example');
-// Plotly.newPlot(chartDiv, {}, {});
+const chartDivLanguages = document.querySelector('.chart__languages');
+const chartDivLevel = document.querySelector('.chart__level');
+const chartDivTechnologies = document.querySelector('.chart__technologies');
+const chartDivConstracts = document.querySelector('.chart__constracts');
+const chartDivCompanySize = document.querySelector('.chart__company_size');
+
 
 const fetchData = async (url) => {
     const response = await fetch(url);
     return await response.json();
 }
 
-const createPlot = async (url, chartDiv) => {
-    const statistics = await fetchData(url);
-    console.log(statistics);
+const createPieCharts = async (url) => {
+    const pieChartsData = await fetchData(url);
 
-    const values = Object.values(statistics);
-    const labels = Object.keys(statistics);
+    const pieChartDivs = [chartDivLanguages, chartDivLevel, chartDivConstracts]
+    const piePlotNames = ['Languages', 'Experience Level', 'Contract Type']
 
-    const total = values.reduce((sum, value) => sum + value, 0);
-    const normalized = values.map(value => value/total * 100)
+    let i = 0;
+    for(statistics in pieChartsData){
 
-    // const data = [{
-    //     values,
-    //     labels,
-    //     type: 'pie'
-    // }];
-    const data = [
-        {
-            x: labels,
-            y: normalized,
-            histfunc: 'count',
-            opacity: 0.8,
-            type: 'bar',
-            marker: {
-                color: 'darkblue'
+        const values = Object.values(pieChartsData[statistics]);
+        const labels = Object.keys(pieChartsData[statistics]);
+    
+        const data = [
+            {
+                values: values,
+                labels: labels,
+                hole: .9,
+                title: piePlotNames[i],
+                textinfo: "label+percent",
+                textposition: "outside",
+                type: 'pie'
             }
+        ]
+    
+        const layout = {
+            showlegend: false,
+            plot_bgcolor:"black",
+            paper_bgcolor:"#FFF0",
+            width: 500,
+            height: 500,
+            font: {
+                family: 'Poppins, sans-serif',
+                size: 18,
+                color: '#d1d1d1'
+            },
+            margin: {
+                t: 20
+            },
         }
-    ]
-
-    const layout = {
-        margin: { 
-            t: 20 
-        }
+    
+        Plotly.newPlot(pieChartDivs[i], data, layout, {staticPlot: true});
+        i++;
     }
-
-    Plotly.newPlot(chartDiv, data, layout);
 }
 
 
-createPlot('http://127.0.0.1:8000/statistics/example/', chartDiv);
+const createBarCharts = async (url) => {
+    const barChartsData = await fetchData(url);
+
+    const barChartDivs = [chartDivTechnologies, chartDivCompanySize];
+    const barPlotNames = ['Top10 Technologies', 'Company Size'];
+    const barPlotXaxis = ['Technologies', 'Number of employees']
+
+    let i = 0; 
+    for(statistics in barChartsData){
+        const values = Object.values(barChartsData[statistics]);
+        const labels = Object.keys(barChartsData[statistics]);
+
+        const total = values.reduce((sum, value) => sum + value, 0);
+        const normalized = values.map(value => value/total * 100);
+    
+        const data = [
+            {
+                x: labels,
+                y: normalized,
+                type: 'bar',
+                marker: {
+                    color: '#393ceb'
+                }
+            }
+        ]
+    
+        const layout = {
+            title: barPlotNames[i],
+            margin: { 
+                t: 50 
+            },
+            xaxis: {
+                title: barPlotXaxis[i],    
+                automargin: true,
+                titlefont: { size:30 },
+            },
+            yaxis: {
+                title: 'Percent',    
+                automargin: true,
+                titlefont: { size:30 },
+            },
+            font: {
+                family: 'Poppins, sans-serif',
+                size: 18,
+                color: '#d1d1d1'
+            },
+            paper_bgcolor:"#FFF0",
+            plot_bgcolor:"#FFF0",
+        }
+    
+        Plotly.newPlot(barChartDivs[i], data, layout, {staticPlot: true});
+        i++;
+    }
+}
+
+createPieCharts("https://jobaid.herokuapp.com/statistics/data/pie");
+createBarCharts("https://jobaid.herokuapp.com/statistics/data/bar");

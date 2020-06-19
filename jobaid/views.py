@@ -1,14 +1,6 @@
 from django.shortcuts import render
-
-
-# def home(request):
-#     context = {
-#         'title': 'Home',
-#         'app': 'jobaid',
-#         'page':'home'
-#     }
-#     return render(request, 'jobaid/home.html', context)
-
+from .utils import make_object_from_form 
+from .forms import AddPositionForm
 
 def about(request):
     context = {
@@ -18,4 +10,20 @@ def about(request):
     }
     return render(request, 'jobaid/about.html', context)
 
+def contribute(request):
+    context = {
+        "title": "Job Offers",
+        'app': 'jobaid',
+        'page': 'contribute'
+    }
+    offers = []
 
+    if request.method == 'POST':
+        form = AddPositionForm(request.POST)
+        new_job_position = make_object_from_form(form)
+        new_job_position.save()
+    else:
+        form = AddPositionForm()
+        context['form'] = form
+
+    return render(request, 'jobaid/contribute.html', context)

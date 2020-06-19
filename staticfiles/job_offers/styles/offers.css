@@ -1,0 +1,364 @@
+.form {
+    width: 960px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form__row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.form__row:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.form__item {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.1em;
+}
+
+.form__item:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.form__input {
+    font-size: 1em;
+    padding: 5px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+
+.form__input:hover, .form__input:read-write {
+    background-color: rgb(255, 255, 255);
+}
+
+
+.form__label {
+    margin-right: 1rem;
+    width: 100%;
+    margin-bottom: 0.3rem;
+}
+
+
+
+.salary__container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.salary__input {
+    flex-grow: 5
+}
+
+.salary__separator {
+    padding: 0 0.5rem;
+    /* flex: 1; */
+}
+
+.technologies {
+    flex: 9;
+    margin-right: 1rem;
+}
+
+.experience {
+    width: 150px;
+}
+
+.location {
+    flex: 3;
+}
+
+.contracts {
+    flex: 2;
+}
+
+.salary {
+    flex: 5;
+}
+
+.experience__select {
+    background-color: rgb(255, 255, 255);    
+}
+
+.contracts__title {
+    text-align: left;
+}
+
+.contracts__container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.contracts__checkbox {
+    padding: 3px;
+}
+
+.submit {
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.form__submit {
+    width: 150px;
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 3px;
+    color: rgb(240, 240, 240);
+    font-weight: 500;
+    letter-spacing: 1px;
+    background-color: #4B4B4B;
+    cursor: pointer;
+}
+
+
+
+/* offers section */
+
+.offer__item {
+    width: 960px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-shadow: 8px 9px 25px -7px rgba(122,122,122,1);
+    -moz-box-shadow: 8px 9px 25px -7px rgba(122,122,122,1);
+    box-shadow: 8px 9px 25px -7px rgba(122,122,122,1);
+}
+
+.item__row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.item__row:last-child {
+    padding-top: 2px;
+    background-color: rgb(223, 223, 223);
+}
+
+.item__title {
+    padding: 10px;
+    background-image: linear-gradient(to right, rgb(118, 118, 228), rgb(131, 183, 241));
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.offer__name {
+    flex-grow: 1;
+    font-size: 1.2em;
+}
+
+.offer__experience {
+    width: 90px;
+}
+
+.offer__location {
+    margin-left: 10px;
+}
+
+.item__details {
+    flex-direction: column;
+}
+
+.item__details:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+
+.details__prefix {
+    width: 140px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.details__salary {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.language__item {
+    display: block;
+    padding: 5px;
+    margin: 0 2px;
+    background-color: rgb(126, 172, 133);   
+    border-radius: 5px;
+}
+
+.technology__item {
+    display: block;
+    padding: 5px;
+    margin: 0 2px;
+    background-color: rgb(228, 143, 143);
+    border-radius: 5px;
+}
+
+.offer__technologies, .offer__finances, 
+.offer__languages {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 5px;
+    overflow-x: hidden;
+}
+
+.offer__contracts {
+    margin-left: 1rem;
+}
+
+.item__link {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 5px;
+}
+
+.offer__link {
+    text-decoration: none;
+    color: rgb(22, 83, 163);
+}
+
+.offer__link:hover {
+    cursor: pointer;
+}
+
+
+/* temporary admin */
+
+.admin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin__form {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+}
+
+.admin__image {
+    width: 200px;
+    display: block;
+    margin: 0 auto;
+}
+
+.admin__file {
+    padding: 3px;
+    background-color: #fff;
+    font-size: 1em;
+    width: 100%;
+}
+
+.admin__password, .admin__file {
+    width: 300px;
+    margin: 5px auto;
+}
+
+.password__label {
+    width: 300px;
+    margin: 5px auto;
+}
+
+.admin__subtitle {
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    font-weight: 400;
+    padding: 10px 0;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.admin__phrase {
+    font-size: 1.2em;
+    font-weight: 300;
+    padding: 10px 0;
+    /* margin-bottom: 10px; */
+    color: rgb(131, 131, 131);
+    text-align: center;  
+}
+
+.admin__submit {
+    width: 300px;
+    margin: 5px auto;
+    border: none;
+    border-radius: 3px;
+    background-color: rgb(75, 75, 75);
+    color: white;
+    text-decoration: uppercase;
+    font-size: 1em;
+    padding: 5px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+.offers__pagination {
+    position: relative;
+    margin: 10px auto;
+    width: 100%;
+}
+
+.pagination__count {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+
+}
+
+.pagination__btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination__btn {
+    padding: 10px;
+    margin: 5px;
+    font-size: 1em;
+    min-width: 50px;
+    background-color: rgb(255, 255, 255);
+    /* border: 2px solid rgb(75, 75, 75); */
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color:rgb(75, 75, 75);
+}
+
+.pagination__btn-current {
+    font-size: 1em;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    background-color: rgb(75, 75, 75);
+}
+
+
+
+
+
+
+
+
+
+.awesome-icon {
+    margin-right: 10px;
+    min-width: 20px;
+}

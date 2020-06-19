@@ -1,4 +1,20 @@
-.chart__example {
-    width: 600px;
-    height: 300px;
+.charts{
+    width: 960px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: rgb(75, 75, 75); */
+    background-color:  rgb(92, 92, 92);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    flex-direction: column-reverse;
+}
+
+.charts__description{
+    text-align: justify;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    padding: 20px;
+    color: #dadada;
 }
