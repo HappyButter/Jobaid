@@ -113,5 +113,5 @@ const createBarCharts = async (url) => {
     }
 }
 
-createPieCharts("http://127.0.0.1:8000/statistics/data/pie");
-createBarCharts("http://127.0.0.1:8000/statistics/data/bar");
+createPieCharts("https://jobaid.herokuapp.com/statistics/data/pie");
+createBarCharts("https://jobaid.herokuapp.com/statistics/data/bar");

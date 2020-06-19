@@ -12,16 +12,17 @@ def joboffers(request):
     }
     offers = []
 
-    if len(request.GET):
-        offers = JobOffer.objects(create_query(request.GET))
-    else:
-        offers = JobOffer.objects(create_query_with_excluded_empty_technologies())
+    # if len(request.GET):
+    offers = JobOffer.objects(create_query(request.GET))
+    # else:
+    #     offers = JobOffer.objects(create_query_with_excluded_empty_technologies())
         
     filters = extract_filters_from_url(request)
     paginator = Paginator(offers, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context['filters'] = filters
+    context['inputs'] = request.GET
     context['page_obj'] = page_obj
     context['is_paginated'] = True
     context['offers_amount'] = len(offers)
