@@ -4,8 +4,160 @@
 
 {% block content %}
 
-    <h2 class="title">Job Offers Page</h2>
-    <p class="paragraph">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Placeat, doloremque. Odit a officia ipsa quisquam atque animi qui sequi quae eos quibusdam, voluptatibus dignissimos maiores, eligendi vitae impedit ducimus sint fuga. Consequuntur aliquam necessitatibus quasi incidunt explicabo. Nemo accusantium suscipit, ad aspernatur maxime similique nulla qui? Cum blanditiis repellendus reprehenderit.</p>
+    <section class="content__section filter">
+    <h2 class="content__subtitle filter__title">Enter your preferences:</h2>
+    <form action="/" method="POST" class="filter__form form">
+        {% csrf_token %}
+        <div class="form__row">
+            <div class="form__item technologies">
+                <label class="form__label technologies__title">Technologies:</label>
+                <input type="text" name="technologies" class="form__input technologies__input" placeholder="Java, Spring" value="{{ inputs.technologies }}"/>
+            </div>
+            <div class="form__item experience">
+                <label class="form__label experience__title">Experience:</label>
+                <select name="experience_level" class="form__input experience__select">
+                    <option class="experience__option" value="all" {% if inputs.experience == 'all' %} selected {% endif %}>All</option>
+                    <option class="experience__option" value="junior" {% if inputs.experience == 'junior' %} selected {% endif %}>Junior</option>
+                    <option class="experience__option" value="mid" {% if inputs.experience == 'mid' %} selected {% endif %}>Mid</option>
+                    <option class="experience__option" value="senior" {% if inputs.experience == 'senior' %} selected {% endif %}>Senior</option>
+                </select>
+            </div>
+        </div>
+        <div class="form__row">  
+            <div class="form__item location">
+                <label class="form__label location__title">Location:</label>
+                <input type="text" name="location" class="form__input location__input" placeholder="Kraków" value="{{ inputs.location }}"/>
+            </div>
+            <div class="form__item contracts">
+                <label class="form__label contracts__title">Contracts:</label>
+                <div class="contracts__container">
+                    <input type="checkbox" name="b2b" class="contracts__checkbox" {%if inputs.b2b %} checked="checked" {% endif %}>
+                    <label class="form__label contracts__label">B2B</label>
+                    <input type="checkbox" name="uop" class="contracts__checkbox" {%if inputs.uop %} checked="checked" {% endif %}>
+                    <label class="form__label contracts__label">UOP</label>
+                </div>
+            </div>
+            <div class="form__item salary">
+                <label class="form__label salary__title">Salary:</label>
+                <div class="salary__container">
+                    <input type="number" name="fork_min" class="form__input salary__input" placeholder="7000" value="{{ inputs.fork_min }}">
+                    <span class="salary__separator">-</span>
+                    <input type="number" name="fork_max" class="form__input salary__input" placeholder="9000" value="{{ inputs.fork_max }}">
+                </div>
+            </div>
+        </div>
+        <div class="form__row submit">
+            <button type="submit" class="form__submit">Search</button>
+        </div>
+    </form>
+    </section>
+    <section class="content__section offers">
+        <h2 class="content__subtitle offers__title">Matched job offers:  ({% if is_paginated %} {{ offers_amount }} {% endif %})</h2>
+        {% if is_paginated %}
+        <div class="offers__pagination">
+            <div class="pagination__btns">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{{ filters }}" class="pagination__btn">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{{ filters }}" class="pagination__btn">Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a href="?page={{ num }}{{ filters }}" class="pagination__btn pagination__btn-current">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}{{ filters }}" class="pagination__btn">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{{ filters }}" class="pagination__btn">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{{ filters }}" class="pagination__btn">Last</a>
+                {% endif %}
+            </div>
+            <div class="pagination__count">
+                Page <span>{{ page_obj.number }}</span> out of <span>{{ page_obj.paginator.num_pages }}</span>
+            </div>
+        </div>
+
+        {% endif %}
+        <div class="offer__list">
+            {% for offer in page_obj %}
+            <article class="offer__item">
+                <div class="item__row item__title">
+                    <span class="offer__name"><i class="fas fa-user-tie awesome-icon"></i> {{ offer.title }}</span>
+                    <span class="offer__experience"><i class="fas fa-graduation-cap"></i> {% if offer.experience_level %}{{ offer.experience_level }}{% else %}?{% endif %}</span>
+                    <span class="offer__location"><i class="fas fa-city"></i> {{ offer.location.address }}</span>
+                </div>
+                <div class="item__row item__details">
+
+                    <div class="offer__languages">
+                        <span class="details__prefix"><i class="fas fa-code awesome-icon"></i> languages:</span>
+                        {% for lang in offer.languages %}
+                            <span class="language__item">{{ lang }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="offer__technologies">
+                        <span class="details__prefix"><i class="fas fa-microchip awesome-icon"></i> technologies:</span>
+                        {% for tech in offer.technologies %}
+                            <span class="technology__item">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="offer__finances">
+                        <span class="details__prefix details__salary"><span><i class="fas fa-money-check-alt awesome-icon"></i> salary:</span></span>
+                        <div>
+                            {% if offer.finances.contracts.b2b %}
+                                {% if offer.finances.salary.b2b.max and offer.finances.salary.b2b.min %}
+                                    <div>
+                                        <span class="offer__salary">{{offer.finances.salary.b2b.min}} - {{offer.finances.salary.b2b.max}} PLN</span>
+                                        <span class="offer__contracts"><i class="fas fa-file-signature"></i> B2B</span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            {% if offer.finances.contracts.uop %}
+                                {% if offer.finances.salary.uop.max and offer.finances.salary.uop.min %}
+                                    <div>
+                                        <span class="offer__salary">{{offer.finances.salary.uop.min}} - {{offer.finances.salary.uop.max}} PLN</span>
+                                        <span class="offer__contracts"><i class="fas fa-file-signature"></i> UOP</span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="item__row item__link">
+                    <a href="{{ offer.offer_link }}" class="offer__link">external offer link</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% if is_paginated %}
+        <div class="offers__pagination">
+            <div class="pagination__btns">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{{ filters }}" class="pagination__btn">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{{ filters }}" class="pagination__btn">Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a href="?page={{ num }}{{ filters }}" class="pagination__btn pagination__btn-current">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}{{ filters }}" class="pagination__btn">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{{ filters }}" class="pagination__btn">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{{ filters }}" class="pagination__btn">Last</a>
+                {% endif %}
+            </div>
+            <div class="pagination__count">
+                Page <span>{{ page_obj.number }}</span> out of <span>{{ page_obj.paginator.num_pages }}</span>
+            </div>
+        </div>
+
+        {% endif %}
+    </section>
     
 
 {% endblock %}

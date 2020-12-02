@@ -21,8 +21,9 @@ urlpatterns = [
     # path('/', views.home),
     # path('home/', views.home),
     path('', include('job_offers.urls')),
-    path('about/', views.about, name='about'),
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('salaryprediction/', include('salary_prediction.urls')),
     path('statistics/', include('statistics_and_charts.urls')),
+    path('contribute/', views.contribute, name='contribute'),
+    path('about/', views.about, name='about')
 ]

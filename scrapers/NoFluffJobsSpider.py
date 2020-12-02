@@ -1,15 +1,16 @@
 from scrapy import Spider
 from scrapy.http import Request
 from hashlib import blake2b
+from datetime import date
 import json
 
 class NoFluffJobsSpider(Spider):
     name = "nofluffjobs"
 
-    languages = ["java", "c#", "c", "c++", "c++ 11", "python", "javascript", "typescript",
-    "r", "php", "ruby on rails", "html5", "html", "css3", "scss", "css", "kotlin",
-    "swift", "flutter", "sql", "scala", "rust", "go", "vba", "ruby", "objective-c",
-    "nosql", "dart" "golang", "php 7"]
+    languages = ["Swift", "Assembler", "Pascal", "Elixir", "CSS3", "Scala", "HTML", "NoSQL", "Python", "Ruby", "C#", "Fortran", "Lisp", "Matlab","Objective-C", "HTML5", "Go", "SCSS", "Erlang", "PHP", "Kotlin", "SQL", "Rust", "Flutter", "Julia", "CSS", "C++", "Golang", "TypeScript", "JavaScript", "C", "Java", "VBA", "R", "Lua", "Dart"]
+
+    languages_lower = ['swift', 'assembler', 'pascal', 'elixir', 'css3', 'scala', 'html', 'nosql', 'python', 'ruby', 'c#', 'fortran', 'lisp', 'matlab', 'objective-c', 'html5', 'go', 'scss', 'erlang', 'php', 'kotlin', 'sql', 'rust', 'flutter', 'julia', 'css', 'c++', 'golang', 'typescript', 'javascript', 'c', 'java', 'vba', 'r', 'lua', 'dart']
+
 
     start_urls = [
         'https://nofluffjobs.com/pl/jobs/remote?criteria=city%3Dremote,warszawa,wroclaw,krakow,gdansk,poznan,trojmiasto,slask,lodz,katowice,lublin,szczecin,bydgoszcz,bialystok,gdynia,gliwice,sopot'
@@ -58,11 +59,11 @@ class NoFluffJobsSpider(Spider):
         if experience == None:
             return None
         if "Junior" in experience or "Stażysta" in experience:
-            return "Junior"
+            return "junior"
         if "Mid" in experience:
-            return "Mid"
+            return "mid"
         if "Senior" in experience or "Expert" in experience:
-            return "Senior"
+            return "senior"
 
 
     def __get_languages_and_technologies_set(self, ancestor):
@@ -78,8 +79,11 @@ class NoFluffJobsSpider(Spider):
     def __extract_languages(self, technology_set):
         skill_set = set()
         for item in technology_set:
-            if item.lower() in self.languages:
-                skill_set.add(item)
+            try:
+                index = self.languages_lower.index(item.lower())
+                skill_set.add(self.languages[index])
+            except ValueError:
+                continue
         return skill_set
 
 
@@ -154,13 +158,12 @@ class NoFluffJobsSpider(Spider):
             'contracts' : finances['contracts'],
             'salary' : finances['salary']
         }
-
-        offer['hash'] = self.__generate_offer_hash(offer)
-
+        offer['offer_hash'] = self.__generate_offer_hash(offer)
         offer_url = ancestor.url
         offer['offer_link'] = offer_url
         offer['source_page'] = offer_url[8:offer_url.find('/pl/job')]
-        
+        offer['date'] = date.today()
+        offer['active'] = True
         yield offer
 
 

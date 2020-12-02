@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% if not is_input_valid %}
+<section class="content__section">
+    <div class="error__message">
+        {{ invalid_input_message }}
+    </div>
+</section>
+{% endif %}
+<section class="content__section data">
+    <article class="data__left">
+        <div>
+            <h3 class="content__subtitle">HEY YOU, HAVE ANY DATA?</h3>
+            <p class="content__paragraph">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure mollitia explicabo, officiis nihil eveniet veniam sed voluptatum sequi. Possimus harum nobis quam, dolor eligendi molestias vero hic reprehenderit iure explicabo repudiandae atque sunt dolore quia doloribus numquam ducimus voluptatibus eos.</p>
+        </div>
+        <form action="/contribute/" method="POST" class="filter__form form">
+            {% csrf_token %}
+            <div class="form__row technologies">
+                <div class="form__item technologies">
+                    <label class="form__label technologies__title">Technologies:</label>
+                    <input type="text" name="technologies" class="form__input technologies__input">
+                </div>
+            </div>
+            <div class="form__row">  
+                <div class="form__item experience">
+                    <label class="form__label experience__title">Experience:</label>
+                    <select name="experience_level" class="form__input experience__select">
+                        <option class="experience__option" value="junior">Junior</option>
+                        <option class="experience__option" value="mid">Mid</option>
+                        <option class="experience__option" value="senior">Senior</option>
+                    </select>
+                </div>
+                <div class="form__item location">
+                    <label class="form__label location__title">Location:</label>
+                    <input type="text" name="location" class="form__input location__input">
+                </div>
+            </div>
+            <div class="form__row"> 
+                <div class="form__item contracts">
+                    <label class="form__label contracts__title">Contracts:</label>
+                    <div class="contracts__container">
+                        <input type="radio" name="contract" value="b2b" class="contracts__checkbox">
+                        <label class="form__label contracts__label">B2B</label>
+                        <input type="radio" name="contract" value="uop" class="contracts__checkbox">
+                        <label class="form__label contracts__label">UOP</label>
+                    </div>
+                </div>
+                <div class="form__item salary">
+                    <label class="form__label salary__title">Salary:</label>
+                    <div class="salary__container">
+                        <div class="input__wrapper">
+                            <!-- <input type="number" name="fork_min" class="salary__input" placeholder="min"> -->
+                            <input type="number" name="fork_min" class="form__input salary__input" placeholder="min">
+                        </div>
+                        <span class="salary__separator">-</span>
+                        <div class="input__wrapper">
+                            <input type="number" name="fork_max" class="form__input salary__input" placeholder="max">
+                            <!-- <input type="number" name="fork_max" class="salary__input" placeholder="max"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form__row submit">
+                <button type="submit" class="form__submit">feed the algorithm</button>
+            </div>
+        </form>
+    </article>
+    <article class="data__right">
+        <img src="{% static 'images/uncle_sam.jpg' %}" alt="Uncle Sam photo" class="uncle__image">
+    </article>
+</section>
+{% endblock content %}

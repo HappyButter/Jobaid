@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+    
+<section class="content__section admin">
+    <form action="/admin/" method="POST" enctype="multipart/form-data" class="admin__form">
+        {% csrf_token %}
+        <img src="{% static 'images/fingerprint.png' %}" alt="" class="admin__image">
+        <h2 class="admin__subtitle">So you claim to be an admin?</h2>
+        <h2 class="admin__subtitle">PROVE IT!</h2>
+        <span class="admin__phrase">and feed us with data...(JSON!)</span>
+        <input type="file" name="datafile" class="admin__file form__input ">
+        <label class="password__label">Enter password:</label>
+        <input type="password" name="password" class="admin__password form__input">
+        <button type="submit" class="admin__submit">SUBMIT</button>
+    </form>
+</section>
+
+{% endblock %}

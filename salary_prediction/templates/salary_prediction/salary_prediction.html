@@ -1,7 +1,50 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-    <h2>Salary Prediction Page</h2>
-    <h3>form to gather user paramethers</h3>
-    <h3>some fancy image</h3>
-    <h3>output box, with some recomendations, maybe some chart</h3>
+<section class="content__section">
+    <h3 class="content__subtitle">Decision tree based salary prediction system</h3>
+    <p class="content__paragraph">Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit blanditiis sapiente sed magni, ipsa obcaecati enim officia nulla natus, deserunt eum perferendis eaque. Sit voluptas distinctio aliquam obcaecati eum, fuga velit error minima, nobis nesciunt sequi quisquam enim atque ratione porro veniam, minus necessitatibus rem expedita voluptatibus dignissimos sapiente? Earum doloremque tenetur fugit veritatis, dolore asperiores repellendus nisi natus laboriosam excepturi, accusantium, sint iste libero nulla distinctio temporibus. Corporis, nemo?</p>
+    <h3 class="content__subtitle">Input the parameters:</h3>
+    <form action="/salaryprediction/" method="POST" class="predict_form form">
+        {% csrf_token %}
+        <div class="form__row">
+            <div class="form__item technologies">
+                <label class="form__label technologies__title">Technologies:</label>
+                <input type="text" name="technologies" class="form__input technologies__input">
+            </div>
+        </div>
+        <div class="form__row">  
+            <div class="form__item experience">
+                <label class="form__label experience__title">Experience:</label>
+                <select name="experience_level" class="form__input experience__select">
+                    <option class="experience__option" value="junior">Junior</option>
+                    <option class="experience__option" value="mid">Mid</option>
+                    <option class="experience__option" value="senior">Senior</option>
+                </select>
+            </div>
+            <div class="form__item location">
+                <label class="form__label location__title">Location:</label>
+                <input type="text" name="location" class="form__input location__input">
+            </div>
+            <div class="form__item contracts">
+                <label class="form__label contracts__title">Contracts:</label>
+                <div class="contracts__container">
+                    <input type="checkbox" name="b2b" class="contracts__checkbox">
+                    <label class="form__label contracts__label">B2B</label>
+                    <input type="checkbox" name="uop" class="contracts__checkbox">
+                    <label class="form__label contracts__label">UOP</label>
+                </div>
+            </div>
+        </div>
+        <div class="form__row submit">
+            <button type="submit" class="form__submit">predict</button>
+        </div>
+    </form>
+    {% if display_results %}
+    <div class="prediction__results">
+        <h3 class="prediction__title">Estimated salary:</h3>
+        <span class="prediction__salary">{{ predicted_salary }}</span>
+    </div>
+    {% endif %}
+</section>
 {% endblock content %}

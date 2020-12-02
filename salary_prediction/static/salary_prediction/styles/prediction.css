@@ -5,3 +5,192 @@ h3 {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+
+.form {
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form__row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.form__row:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.form__item {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.1em;
+}
+
+.form__item:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.form__input {
+    display: block;
+    font-size: 1em;
+    padding: 5px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+
+.form__input:hover, .form__input:read-write {
+    background-color: rgb(255, 255, 255);
+}
+
+
+.form__label {
+    margin-right: 1rem;
+    width: 100%;
+    margin-bottom: 0.3rem;
+}
+
+
+
+.salary__container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.input__wrapper {
+    width: 100%;
+    display: flex;
+}
+
+.salary__input {
+    font-size: 1.1em;
+    width: 100%;
+}
+
+.technologies__input {
+    flex: 1;
+}
+
+.salary__separator {
+    padding: 0 0.5rem;
+    /* flex: 1; */
+}
+
+.technologies {
+    flex: 1;
+}
+
+.experience {
+    flex: 3;
+}
+
+.location {
+    flex: 4;
+}
+
+.contracts {
+    width: 120px;
+}
+
+.salary {
+    flex-grow: 1;
+}
+
+.experience__select {
+    background-color: rgb(255, 255, 255);    
+}
+
+.contracts__title {
+    text-align: left;
+}
+
+.contracts__label {
+    margin-left: 5px;
+}
+
+.contracts__container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.contracts__checkbox {
+    padding: 3px;
+}
+
+.submit {
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.form__submit {
+    width: 150px;
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 3px;
+    color: rgb(240, 240, 240);
+    font-weight: 500;
+    letter-spacing: 1px;
+    background-color: #4B4B4B;
+    cursor: pointer;
+}
+
+
+.data {
+    display: flex;
+    max-width: 960px;
+    justify-content: space-between;
+    margin: 40px 0;
+}
+
+.data__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 520px;
+    margin-right: 40px;
+}
+
+.uncle__image {
+    display: block;
+    width: 400px;
+}
+
+
+/* PREDICTION RESULTS BOX */
+
+.prediction__results {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 3px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.prediction__title {
+    padding: 10px;
+    font-size: 1.2em;
+    color: rgb(75, 75, 75);
+}
+
+.prediction__salary {
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgb(75, 75, 75);
+    background-color: rgb(155, 202, 116);
+    padding: 10px 20px;
+    border-radius: 3px;
+    font-style: italic;
+}
+
+

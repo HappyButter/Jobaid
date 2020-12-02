@@ -1,14 +1,17 @@
 import json
 from hashlib import blake2b
+from datetime import date
 
 from scrapy import Spider
 from scrapy.http import Request
 
 class BulldogJobSpider(Spider):
+    
     name = "bulldogjob"
 
-    # lowercase because some offers have languages starting with small letter...
-    languages = ["java", "c#", "c", "c++", "python", "javascript", "typescript", "r", "php", "ruby on rails", "html5", "html", "css3", "scss", "css", "kotlin", "swift", "flutter", "sql", "scala", "rust", "go", "vba", "ruby", "objective-c", "nosql", "dart" "golang", "php 7"]
+    languages = ["Swift", "Assembler", "Pascal", "Elixir", "CSS3", "Scala", "HTML", "NoSQL", "Python", "Ruby", "C#", "Fortran", "Lisp", "Matlab","Objective-C", "HTML5", "Go", "SCSS", "Erlang", "PHP", "Kotlin", "SQL", "Rust", "Flutter", "Julia", "CSS", "C++", "Golang", "TypeScript", "JavaScript", "C", "Java", "VBA", "R", "Lua", "Dart"]
+
+    languages_lower = ['swift', 'assembler', 'pascal', 'elixir', 'css3', 'scala', 'html', 'nosql', 'python', 'ruby', 'c#', 'fortran', 'lisp', 'matlab', 'objective-c', 'html5', 'go', 'scss', 'erlang', 'php', 'kotlin', 'sql', 'rust', 'flutter', 'julia', 'css', 'c++', 'golang', 'typescript', 'javascript', 'c', 'java', 'vba', 'r', 'lua', 'dart']
 
     start_urls = [
         'https://bulldogjob.pl/companies/jobs?page=1',
@@ -64,7 +67,17 @@ class BulldogJobSpider(Spider):
     
 
     def __extract_languages(self, technology_set):
-        return set(item for item in technology_set if item.lower() in self.languages)
+        # return set(item for item in technology_set if item.lower() in self.languages)
+        # return set(self.languages[i] for item in technology_set if i = self.languages_lower.find(item.lower()) is not -1)
+        lang_set = set()
+        for item in technology_set:
+            try:
+                index = self.languages_lower.index(item.lower())
+                lang_set.add(self.languages[index])
+            except ValueError:
+                continue
+
+        return lang_set
 
 
 
@@ -101,8 +114,8 @@ class BulldogJobSpider(Spider):
 
     def __get_salary_forks(self, ancestor):
         salary = {
-            'b2b': None,
-            'uop': None
+            'b2b': 0,
+            'uop': 0
         }
 
         for salary_div in ancestor.css('.salary'):
@@ -130,23 +143,19 @@ class BulldogJobSpider(Spider):
                 if any([keyword in forks_str for keyword in lower_boundary_keywords]):
                     if 'b2b' in contract_type:
                         salary['b2b'] = {
-                            'min': int(forks_str) if not per_hour else int(forks_str)*160,
-                            'max': None
+                            'min': int(forks_str) if not per_hour else int(forks_str)*160
                         }
                     if 'umowa o pracę' in contract_type or 'employment contract' in contract_type:
                         salary['uop'] = {
-                            'min': int(forks_str) if not per_hour else int(forks_str)*160,
-                            'max': None
+                            'min': int(forks_str) if not per_hour else int(forks_str)*160
                         }
                 elif any([keyword in forks_str for keyword in upper_boundary_keywords]):
                     if 'b2b' in contract_type:
                         salary['b2b'] = {
-                            'min': None,
                             'max': int(forks_str) if not per_hour else int(forks_str)*160
                         }
                     if 'umowa o pracę' in contract_type or 'employment contract' in contract_type:
                         salary['uop'] = {
-                            'min': None,
                             'max': int(forks_str) if not per_hour else int(forks_str)*160
                         }
         return salary
@@ -183,15 +192,17 @@ class BulldogJobSpider(Spider):
         offer['technologies'] = list(skills_set - lang_set) # set differene
 
         offer['finances'] = {
-            'contract': self.__get_contract_types(sidebar_details),
+            'contracts': self.__get_contract_types(sidebar_details),
             'salary': self.__get_salary_forks(sidebar_details)
         }
 
-        offer['hash'] = self.__generate_offer_hash(offer)
+        offer['offer_hash'] = self.__generate_offer_hash(offer)
 
         offer_url = response.url
         offer['offer_link'] = offer_url
         offer['source_page'] = 'bulldogjob.pl'
+        offer['date'] = date.today()
+        offer['active'] = True
 
         yield offer
 
